@@ -62,7 +62,6 @@ def reply_markup(chat_id, text):
 def reply_ip_markup(chat_id, text):
 	arr = []
 	for car in company:
-		print('IP', car)
 		if car != '':
 			arr.append([car])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
@@ -107,7 +106,7 @@ def inline_keyboard2(chat_id, text):
 
 
 def check_time():
-	if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 55 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 8 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -131,7 +130,7 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 45 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 0 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -225,7 +224,6 @@ def check_updates():
 	if i == -1:
 		return
 
-	print('Changes', changes_new)
 	send_changes(changes_new)
 
 def check_car_new_vol(line, num):
@@ -413,8 +411,11 @@ def check_message(message):
 			return
 
 
-	chat_id = message['message']['chat']['id']
-	if chat_id == group_id:
+	try:
+		chat_id = message['message']['chat']['id']
+		if chat_id == group_id:
+			return
+	except:
 		return
 
 	if message['message']['text'] == 'Добавить машину':
@@ -510,6 +511,12 @@ def check_message(message):
 			send_message(chat_id, 'Неправильный ник')
 		admins.add(message['message']['text'][1:])
 		send_message(chat_id, 'Админ успешно добавлен')
+		for driver in drivers:
+			try:
+				if message['message']['chat']['username'] == message['message']['text'][1:]:
+					reply_admin_markup(chat_id, 'Вас назначили админом')
+			except:
+				continue
 		return
 
 	if message['message']['text'] == 'Показать админов' and set([chat_id]).issubset(admin_id):
@@ -551,7 +558,7 @@ def checking():
 
 	check_time()
 	check_time2()
-	check_time3()
+	#check_time3()
 	check_driver_time()
 	#update_time = check_updates(update_time)
 
@@ -634,6 +641,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
