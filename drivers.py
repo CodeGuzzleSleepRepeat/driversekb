@@ -17,7 +17,9 @@ drivers = []
 trips = []
 changes = []
 active_drivers = {}
+active_drivers2 = {}
 prior_table = {}
+prior_table2 = {}
 cur_driver = {}
 cur_time = {}
 company = {}
@@ -27,9 +29,12 @@ admin_id = set()
 
 flag_start = {}
 flag_date = {}
+flag_date2 = {}
+flag_date3 = {}
 flag_task = {}
 flag_driver = {}
 flag_ready = {}
+flag_ready2 = {}
 flag_took = {}
 flag_admin = {}
 flag_num_cars = {}
@@ -102,23 +107,74 @@ def inline_keyboard2(chat_id, text):
 
 
 def check_time():
-	if datetime.datetime.now().hour == 13 and datetime.datetime.now().minute == 40 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 55 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
-		#gt.del_driver_from_table(data_car)
+		try:
+			gt.del_driver_from_table(data_car)
+		except:
+			jj = 0
 		for driver in drivers:
 			flag_ready[driver] = 1
 
 			for car in company:
 				if company[car][0] == driver:
 					flag_driver[driver] = 1
-					reply_markup_cars(driver, 'Готовы ли вы работать завтра? Если да - выберите, пожалуйста, номер машины', car)
+					reply_markup_cars(driver, 'Готовы ли вы работать завтра утром? Если да - выберите, пожалуйста, номер машины', car)
 					break
 			else:
-				reply_ip_markup(driver, 'Готовы ли вы работать завтра? Если да - выберите ИП')
+				reply_ip_markup(driver, 'Готовы ли вы работать завтра утром? Если да - выберите ИП')
 
 		active_drivers.clear()
 	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
+		for driver in drivers:
+			flag_ready[driver] = 0
+
+def check_time2():
+	if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 45 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
+		try:
+			gt.del_driver_from_table(data_car)
+		except:
+			jj = 0
+		for driver in drivers:
+			flag_ready[driver] = 1
+
+			for car in company:
+				if company[car][0] == driver:
+					flag_driver[driver] = 1
+					reply_markup_cars(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите, пожалуйста, номер машины', car)
+					break
+			else:
+				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
+
+		active_drivers.clear()
+	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
+		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
+		for driver in drivers:
+			flag_ready[driver] = 0
+
+def check_time3():
+	if datetime.datetime.now().hour == 13 and datetime.datetime.now().minute == 5 and flag_date3[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 1
+		try:
+			gt.del_driver_from_table(data_car)
+		except:
+			jj = 0
+		for driver in drivers:
+			flag_ready[driver] = 1
+
+			for car in company:
+				if company[car][0] == driver:
+					flag_driver[driver] = 1
+					reply_markup_cars(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите, пожалуйста, номер машины', car)
+					break
+			else:
+				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
+
+		active_drivers.clear()
+	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
+		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
 		for driver in drivers:
 			flag_ready[driver] = 0
 
@@ -169,6 +225,7 @@ def check_updates():
 	if i == -1:
 		return
 
+	print('Changes', changes_new)
 	send_changes(changes_new)
 
 def check_car_new_vol(line, num):
@@ -194,7 +251,7 @@ def check_car_new_vol(line, num):
 		'''
 		try:
 			if line[1][len(line[1]) - 1] == '+' or line[1][len(line[1]) - 1] == '-':
-				line[1] = line[1][:len([1]) - 1]
+				line[1] = line[1][:len(line[1]) - 1]
 			if int(data_car[ind_car][2]) < int(line[1]):
 				return False
 		except:
@@ -214,7 +271,8 @@ def send_changes(data):
 				if data[j][i + 1] != '':
 					prior_table[data[j][0]][i] = data[j][i + 1]
 		except:
-			print('Bad parsing')
+			print('Bad sending changes')
+
 
 		try:
 			if not check_car_new_vol(data[j], num):
@@ -223,8 +281,9 @@ def send_changes(data):
 		except:
 			k = 0
 
-		mes = form_mes(prior_table[data[j][0]], data[j][0] + num)
+		
 		try:
+			mes = form_mes(prior_table[data[j][0]], data[j][0] + num)
 			send_message(prior_table[data[j][0]][3].split('_')[0], 'Детали поездки изменились:\n' + mes)
 		except:
 			return
@@ -253,7 +312,6 @@ def reject_driver(chat_id, prior, text):
 		prior_table[prior] = prior_table[prior][:3] + prior_table[prior][4:]
 		request_driver(prior, chat_id)
 	except:
-		#no_drivers_alert(prior)
 		cc = 0
 		if text != '':
 			send_message(chat_id, text)
@@ -266,12 +324,19 @@ def request_driver(prior, chat_id):
 
 	mes = form_mes(prior_table[prior], prior)
 
+
+
 	try:
 		driver = prior_table[prior][3]
-		flag_task[prior_table[prior][3]] = 1
 	except:
 		no_drivers_alert(prior)
 		return
+
+	try:
+		flag_task[prior_table[prior][3]] = 1
+	except:
+		jj = 0
+
 	if gt.check_driver(active_drivers[driver][0], prior_table[prior], prior, data_car, data_trip):
 		inline_keyboard(driver, mes, str(prior))
 		num_of_orders += 1 
@@ -281,7 +346,13 @@ def request_driver(prior, chat_id):
 
 def pathetic_news():
 	for driver in active_drivers:
-		if active_drivers[driver][3] == -1:
+		for prior in prior_table:
+			try:
+				if prior_table[prior][3] == driver:	
+					break
+			except:
+				continue
+		else:
 			send_message(driver.split('_')[0], 'К сожалению, заказов для машины ' + active_drivers[driver][0] + ' на сегодня больше не осталось (если только кто-то не откажется от уже принятого)')
 
 def check_message(message):
@@ -400,6 +471,7 @@ def check_message(message):
 				send_message(chat_id, 'Машины с таким номером нет в списке исполнителей и она не может быть назначена на заказ. Пожалуйста, проверьте правильность данных и, если все верно, свяжитесь с заказчиком')
 		return
 
+
 		
 
 
@@ -422,7 +494,8 @@ def check_message(message):
 		for driver in active_drivers:
 			flag_task[driver] = 0
 		for prior in prior_table:
-			request_driver(prior, chat_id)
+			if not gt.taken[prior]:
+				request_driver(prior, chat_id)
 		send_message(chat_id, 'Маршруты распределены, ожидаем ответов от исполнителей')
 		return
 
@@ -477,6 +550,8 @@ def checking():
 	global update_time
 
 	check_time()
+	check_time2()
+	check_time3()
 	check_driver_time()
 	#update_time = check_updates(update_time)
 
@@ -485,12 +560,15 @@ def main():
 	global data_trip
 	global data_car
 
-	gt.north = gt.get_north()
+	#gt.north = gt.get_north()
 
 	admins.add('fcknmaggot')
 
 	f = True
 	flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
+	flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
+
+	flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
 
 	data_trip, data_car = gt.parse_secondary()
 	prepare_cars()
@@ -508,7 +586,7 @@ def main():
 		try:
 			thread_check = Thread(target = checking, args = [])
 			thread_check.start()
-			if (datetime.datetime.now() - update_time).total_seconds() > 300:
+			if (datetime.datetime.now() - update_time).total_seconds() > 180:
 				thread_update = Thread(target = check_updates, args = [])
 				thread_update.start()
 		except:
@@ -556,5 +634,8 @@ def main():
 
 
 main()
+
+
+
 
 
