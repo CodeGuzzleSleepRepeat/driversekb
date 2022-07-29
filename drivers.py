@@ -42,6 +42,7 @@ flag_new_car = {}
 longing = {}
 
 flag_time = 0
+flag_sec = 0
 
 num_of_orders = 0
 taken_orders = 0
@@ -73,7 +74,6 @@ def reply_markup_cars(chat_id, text, ip):
 	for car in company[ip][1:]:
 		if car != '':
 			arr.append([car])
-	arr.append(['Добавить машину'])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
@@ -105,7 +105,10 @@ def inline_keyboard2(chat_id, text):
 	return requests.get(f'{URL}{TOKEN}/sendMessage', data = data)
 
 
+
 def check_time():
+	global flag_sec
+
 	if datetime.datetime.now().hour == 8 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
@@ -125,6 +128,7 @@ def check_time():
 
 		active_drivers.clear()
 	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
+		flag_sec = 0
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
 		for driver in drivers:
 			flag_ready[driver] = 0
@@ -566,10 +570,12 @@ def main():
 	global admin_id
 	global data_trip
 	global data_car
+	global flag_sec
 
 	#gt.north = gt.get_north()
 
 	admins.add('fcknmaggot')
+	admins.add('as_mironov')
 
 	f = True
 	flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
@@ -596,6 +602,9 @@ def main():
 			if (datetime.datetime.now() - update_time).total_seconds() > 180:
 				thread_update = Thread(target = check_updates, args = [])
 				thread_update.start()
+			if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 0 and flag_sec == 0:
+				flag_sec = 1
+				data_trip, data_car = gt.parse_secondary()
 		except:
 			k = 0
 
@@ -641,6 +650,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
