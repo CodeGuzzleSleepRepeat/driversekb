@@ -8,6 +8,7 @@ import json
 #acc-824@driversdistrib.iam.gserviceaccount.com
 
 TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'
+#TOKEN = '5436969391:AAGZPyZn659hqnwYpL_3nVSCipTSDp9oTaA'
 URL = 'https://api.telegram.org/bot'
 
 
@@ -310,13 +311,13 @@ def no_drivers_alert(trip_id):
 		return
 
 def reject_driver(chat_id, prior, text):
+	if text != '':
+		send_message(chat_id, text)
 	try:
-		prior_table[prior] = prior_table[prior][:3] + prior_table[prior][4:]
+		prior_table[prior] = prior_table[prior][:3] + prior_table[prior][4:]	
 		request_driver(prior, chat_id)
 	except:
-		cc = 0
-		if text != '':
-			send_message(chat_id, text)
+		return
 
 def form_mes(data, prior):
 	return 'Маршрут: ' + str(prior)[:len(prior) - 2] + '\nОбъем: ' + str(data[0]) + '\nВремя: ' + str(data[1]) + '\nВорота: ' + str(data[2])
@@ -442,6 +443,8 @@ def check_message(message):
 	if not set([str(chat_id) + '_' + str(flag_num_cars[chat_id])]).issubset(active_drivers) and flag_ready[chat_id] == 1:
 		if flag_driver[chat_id] == 0:
 			cur_driver[chat_id] = ['', message['message']['text'], '', -1]
+			print(company)
+			print(message['message']['text'])
 			try:
 				company[message['message']['text']][0] = chat_id
 			except:
@@ -550,10 +553,13 @@ def prepare_cars():
 		if line[1] == '':
 			data_car = data_car[:i]
 			return
+		tmp = line[1]
+		if line[1][len(line[1]) - 1] == ' ':
+			tmp = line[1][:len(line[1]) - 1]
 		try:
-			company[line[1]].append(line[0])
+			company[tmp].append(line[0])
 		except:
-			company[line[1]] = [-1, line[0]]
+			company[tmp] = [-1, line[0]]
 
 
 
@@ -605,6 +611,7 @@ def main():
 			if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 0 and flag_sec == 0:
 				flag_sec = 1
 				data_trip, data_car = gt.parse_secondary()
+				prepare_cars()
 		except:
 			k = 0
 
@@ -650,6 +657,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
