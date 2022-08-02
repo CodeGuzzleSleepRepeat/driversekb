@@ -351,8 +351,8 @@ def clear_data(ind, prior_table, driver_data, data_car, data_trip, data):
 	counter = 0
 	while counter < 10:
 		try:
-			sh.sheet1.update_cell(ind + 3, 2, '')
-			sh.sheet1.update_cell(ind + 3, 3, '')
+			print(sh.sheet1.update_cell(ind + 3, 2, ''))
+			print(sh.sheet1.update_cell(ind + 3, 3, ''))
 			break
 		except:
 			time.sleep(10)
@@ -364,7 +364,7 @@ def clear_data(ind, prior_table, driver_data, data_car, data_trip, data):
 
 	if data_trip[ind_trip][11] == 'Север (C)':
 		north = ''
-		save_north(north)
+		#save_north(north)
 
 	minus_km(ind_car, data_car, data_trip, driver_data[0])
 
@@ -485,8 +485,12 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			continue
 		
 
-		
-		
+		if len(data_car[ind_car][17]) == 0 and data_trip[ind_trip][11] == 'Мега':
+			сontinue
+		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'Новоуральск':
+			сontinue
+		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11] == 'шатл':
+			сontinue
 
 		'''
 		try:
