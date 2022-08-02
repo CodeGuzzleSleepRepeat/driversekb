@@ -7,8 +7,8 @@ import json
 
 #acc-824@driversdistrib.iam.gserviceaccount.com
 
-TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'
-#TOKEN = '5436969391:AAGZPyZn659hqnwYpL_3nVSCipTSDp9oTaA'
+#TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'		
+TOKEN = '5436969391:AAGZPyZn659hqnwYpL_3nVSCipTSDp9oTaA'	#test
 URL = 'https://api.telegram.org/bot'
 
 
@@ -85,7 +85,7 @@ def reply_markup2(chat_id, text):
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def reply_admin_markup(chat_id, text):
-	reply_markup = { "keyboard": [['Начать распределение'], ['Добавить админа'], ['Показать админов']], "resize_keyboard": True, "one_time_keyboard": False}
+	reply_markup = { "keyboard": [['Начать распределение'], ['Добавить админа'], ['Удалить админа'], ['Показать админов']], "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
@@ -110,7 +110,7 @@ def inline_keyboard2(chat_id, text):
 def check_time():
 	global flag_sec
 
-	if datetime.datetime.now().hour == 8 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 118 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -135,7 +135,7 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 0 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -526,6 +526,25 @@ def check_message(message):
 				continue
 		return
 
+	if message['message']['text'] == 'Удалить админа' and set([chat_id]).issubset(admin_id):
+		flag_admin[chat_id] = -1
+		send_message(chat_id, 'Введите ник')
+		return
+
+	if flag_admin[chat_id] == -1:
+		flag_admin[chat_id] = 0
+		if message['message']['text'][0] != '@':
+			send_message(chat_id, 'Неправильный ник')
+		admins.discard(message['message']['text'][1:])
+		send_message(chat_id, 'Админ успешно удален')
+		for driver in drivers:
+			try:
+				if message['message']['chat']['username'] == message['message']['text'][1:]:
+					reply_markup_cars(chat_id, 'Вас удалили из админов')
+			except:
+				continue
+		return
+
 	if message['message']['text'] == 'Показать админов' and set([chat_id]).issubset(admin_id):
 		flag_admin[chat_id] = 0
 		for admin in admins:
@@ -638,6 +657,13 @@ def main():
 							username = message['message']['chat']['username']
 						except:
 							username = ''
+						print(username, admins)
+						for adm in admins:
+							for i in range(len(adm)):
+								try:
+									print(username[i], username[i] == adm[i])
+								except:
+									continue
 						if set([username]).issubset(admins):
 							admin_id.add(message['message']['chat']['id'])
 							reply_admin_markup(message['message']['chat']['id'], 'Добро пожаловать')
@@ -647,16 +673,19 @@ def main():
 					except:
 							k = 0
 
-				if True:
+				try:
 					thread = Thread(target = check_message, args = [message])
 					thread.start()
-				else:
+				except:
 					continue
 
 		time.sleep(0.1)
 
 
 main()
+
+
+
 
 
 
