@@ -7,8 +7,8 @@ import json
 
 #acc-824@driversdistrib.iam.gserviceaccount.com
 
-#TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'		
-TOKEN = '5436969391:AAGZPyZn659hqnwYpL_3nVSCipTSDp9oTaA'	#test
+TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'		
+#TOKEN = '5436969391:AAGZPyZn659hqnwYpL_3nVSCipTSDp9oTaA'	#test
 URL = 'https://api.telegram.org/bot'
 
 
