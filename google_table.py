@@ -486,11 +486,11 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 		
 
 		if len(data_car[ind_car][17]) == 0 and data_trip[ind_trip][11] == 'Мега':
-			сontinue
+			continue
 		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'Новоуральск':
-			сontinue
+			continue
 		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11] == 'шатл':
-			сontinue
+			continue
 
 		'''
 		try:
