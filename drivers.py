@@ -40,6 +40,7 @@ flag_took = {}
 flag_admin = {}
 flag_num_cars = {}
 flag_new_car = {}
+flag_new_admin = {}
 longing = {}
 
 flag_time = 0
@@ -135,7 +136,7 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	if datetime.datetime.now().hour == 17 and datetime.datetime.now().minute == 0 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -186,7 +187,7 @@ def check_driver_time():
 	for driver in active_drivers:
 		try:
 			now = datetime.datetime.now()
-			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
+			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 36:
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
@@ -387,6 +388,8 @@ def check_message(message):
 			send_message(chat_id, 'В случае, если потребуется отказаться от заказа - нажмите Не согласен')
 			gt.input_data(int(ddd[len(ddd.split('_')[0]) - 2:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			taken_orders += 1
+
+			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			if taken_orders == num_of_orders:
 				pathetic_news()
 			return 
@@ -423,6 +426,15 @@ def check_message(message):
 	except:
 		return
 
+
+	if True:
+		if set([message['message']['chat']['username']]).issubset(admins) and flag_new_admin[chat_id] == 0:
+			reply_admin_markup(chat_id, 'Вас назначили админом')
+			flag_new_admin[chat_id] = 1
+			admin_id.add(chat_id)
+	else:
+		jj = 0
+
 	if message['message']['text'] == 'Добавить машину':
 		send_message(chat_id, 'Введите номер машины')
 		flag_new_car[chat_id] = 1
@@ -440,11 +452,10 @@ def check_message(message):
 		reply_markup_cars(chat_id, 'Машина успешно добавлена', cur_company)
 		return
 
+
 	if not set([str(chat_id) + '_' + str(flag_num_cars[chat_id])]).issubset(active_drivers) and flag_ready[chat_id] == 1:
 		if flag_driver[chat_id] == 0:
 			cur_driver[chat_id] = ['', message['message']['text'], '', -1]
-			print(company)
-			print(message['message']['text'])
 			try:
 				company[message['message']['text']][0] = chat_id
 			except:
@@ -479,7 +490,6 @@ def check_message(message):
 				send_message(chat_id, 'Машины с таким номером нет в списке исполнителей и она не может быть назначена на заказ. Пожалуйста, проверьте правильность данных и, если все верно, свяжитесь с заказчиком')
 		return
 
-
 		
 
 
@@ -507,6 +517,7 @@ def check_message(message):
 		send_message(chat_id, 'Маршруты распределены, ожидаем ответов от исполнителей')
 		return
 
+
 	if message['message']['text'] == 'Добавить админа' and set([chat_id]).issubset(admin_id):
 		flag_admin[chat_id] = 1
 		send_message(chat_id, 'Введите ник')
@@ -516,14 +527,9 @@ def check_message(message):
 		flag_admin[chat_id] = 0
 		if message['message']['text'][0] != '@':
 			send_message(chat_id, 'Неправильный ник')
+			return
 		admins.add(message['message']['text'][1:])
 		send_message(chat_id, 'Админ успешно добавлен')
-		for driver in drivers:
-			try:
-				if message['message']['chat']['username'] == message['message']['text'][1:]:
-					reply_admin_markup(chat_id, 'Вас назначили админом')
-			except:
-				continue
 		return
 
 	if message['message']['text'] == 'Удалить админа' and set([chat_id]).issubset(admin_id):
@@ -652,18 +658,12 @@ def main():
 						flag_admin[message['message']['chat']['id']] = 0
 						flag_num_cars[message['message']['chat']['id']] = 0
 						flag_new_car[message['message']['chat']['id']] = 0
+						flag_new_admin[message['message']['chat']['id']] = 0
 
 						try:
 							username = message['message']['chat']['username']
 						except:
 							username = ''
-						print(username, admins)
-						for adm in admins:
-							for i in range(len(adm)):
-								try:
-									print(username[i], username[i] == adm[i])
-								except:
-									continue
 						if set([username]).issubset(admins):
 							admin_id.add(message['message']['chat']['id'])
 							reply_admin_markup(message['message']['chat']['id'], 'Добро пожаловать')
@@ -683,6 +683,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
