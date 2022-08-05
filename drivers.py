@@ -116,7 +116,7 @@ def check_time():
 		try:
 			gt.del_driver_from_table(data_car)
 		except:
-			jj = 0
+			ii = 0
 		for driver in drivers:
 			flag_ready[driver] = 1
 
@@ -141,7 +141,7 @@ def check_time2():
 		try:
 			gt.del_driver_from_table(data_car)
 		except:
-			jj = 0
+			ii = 0
 		for driver in drivers:
 			flag_ready[driver] = 1
 
@@ -165,7 +165,7 @@ def check_time3():
 		try:
 			gt.del_driver_from_table(data_car)
 		except:
-			jj = 0
+			ii = 0
 		for driver in drivers:
 			flag_ready[driver] = 1
 
@@ -187,7 +187,7 @@ def check_driver_time():
 	for driver in active_drivers:
 		try:
 			now = datetime.datetime.now()
-			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 36:
+			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
@@ -339,7 +339,7 @@ def request_driver(prior, chat_id):
 	try:
 		flag_task[prior_table[prior][3]] = 1
 	except:
-		jj = 0
+		ii = 0
 
 	if gt.check_driver(active_drivers[driver][0], prior_table[prior], prior, data_car, data_trip):
 		inline_keyboard(driver, mes, str(prior))
@@ -683,6 +683,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
