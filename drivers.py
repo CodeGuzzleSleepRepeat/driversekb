@@ -427,12 +427,12 @@ def check_message(message):
 		return
 
 
-	if True:
+	try:
 		if set([message['message']['chat']['username']]).issubset(admins) and flag_new_admin[chat_id] == 0:
 			reply_admin_markup(chat_id, 'Вас назначили админом')
 			flag_new_admin[chat_id] = 1
 			admin_id.add(chat_id)
-	else:
+	except:
 		jj = 0
 
 	if message['message']['text'] == 'Добавить машину':
