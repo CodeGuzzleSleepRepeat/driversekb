@@ -363,6 +363,7 @@ def check_message(message):
 	global trips
 	global taken_orders
 	global num_of_orders
+	global admin_id
 
 	if str(message).find('callback_query') > -1:
 		chat_id = message['callback_query']['message']['chat']['id']
@@ -428,10 +429,13 @@ def check_message(message):
 
 
 	try:
+		print('New admin')
 		if set([message['message']['chat']['username']]).issubset(admins) and flag_new_admin[chat_id] == 0:
+			print(message['message']['chat']['username'], admins)
 			reply_admin_markup(chat_id, 'Вас назначили админом')
-			flag_new_admin[chat_id] = 1
 			admin_id.add(chat_id)
+			flag_new_admin[chat_id] = 1
+			
 	except:
 		jj = 0
 
