@@ -281,6 +281,11 @@ def send_changes(data):
 		try:
 			if not check_car_new_vol(data[j], num):
 				reject_driver(prior_table[data[j][0]][3].split('_')[0], data[j][0], 'Объем груза изменен и больше не подходит вашей машине')
+				try:
+					if active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]][3] >= 0:
+						gt.clear_data(int(prior_table[data[j][0]][3][len(prior_table[data[j][0]][3].split('_')[0]) - 2:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]], data_car, data_trip, trips)
+				except:
+					print('Trouble with clearing data in table')
 				return
 		except:
 			k = 0
