@@ -437,10 +437,10 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 		ind_car = find_car_ind(drivers[driver][0], data_car)
 
 		try:
+			if len(data_car[ind_car][5]) == 0 and line[1] == '10':
+					continue
 			if line[1][len(line[1]) - 1] == '+' or line[1][len(line[1]) - 1] == '-':
 				#line[1] = line[1][:len(line[1]) - 1]
-				if len(data_car[ind_car][5]) == 0 and line[1] == '10':
-					continue
 				if len(data_car[ind_car][6]) == 0 and line[1] == '20-':		#Грузоподъемность
 					continue
 				if len(data_car[ind_car][7]) == 0 and line[1] == '20+':
@@ -621,5 +621,6 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		except:
 			j = 0
 
+ 
  
  
