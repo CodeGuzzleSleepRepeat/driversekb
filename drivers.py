@@ -67,11 +67,13 @@ def reply_ip_markup(chat_id, text):
 	for car in company:
 		if car != '':
 			arr.append([car])
+	print(arr, chat_id)
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def reply_markup_cars(chat_id, text, ip):
+	print(ip, chat_id)
 	arr = []
 	for car in company[ip][1:]:
 		if car != '':
@@ -136,7 +138,7 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 4 and datetime.datetime.now().minute == 31 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -187,14 +189,14 @@ def check_driver_time():
 	for driver in active_drivers:
 		try:
 			now = datetime.datetime.now()
-			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
+			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 36:
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
 					if trip == -1:
 						flag_task[driver] = 0
 						continue
-					reject_driver(int(driver.split('_')[0]), trip, 'Вы не согласились на заказ за час - он предложен другому исполнителю')
+					#reject_driver(int(driver.split('_')[0]), trip, 'Вы не согласились на заказ за час - он предложен другому исполнителю')
 
 				except:
 					print('Something wrong with time rejection')
@@ -434,13 +436,10 @@ def check_message(message):
 
 
 	try:
-		print('New admin')
-		if set([message['message']['chat']['username']]).issubset(admins) and flag_new_admin[chat_id] == 0:
-			print(message['message']['chat']['username'], admins)
-			reply_admin_markup(chat_id, 'Вас назначили админом')
+		if set([message['message']['chat']['username']]).issubset(admins) and flag_new_admin[chat_id] == 0:		
 			admin_id.add(chat_id)
+			reply_admin_markup(chat_id, 'Вас назначили админом')
 			flag_new_admin[chat_id] = 1
-			
 	except:
 		jj = 0
 
@@ -596,7 +595,6 @@ def prepare_cars():
 			company[tmp] = [-1, line[0]]
 
 
-
 def checking():
 	global update_time
 
@@ -642,8 +640,7 @@ def main():
 			if (datetime.datetime.now() - update_time).total_seconds() > 180:
 				thread_update = Thread(target = check_updates, args = [])
 				thread_update.start()
-			if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 0 and flag_sec == 0:
-				flag_sec = 1
+			if (datetime.datetime.now() - update_time).total_seconds() > 1800:
 				data_trip, data_car = gt.parse_secondary()
 				prepare_cars()
 		except:
@@ -692,6 +689,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
