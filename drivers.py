@@ -5,7 +5,7 @@ from threading import Thread
 import google_table as gt
 import json
 
-#acc-824@driversdistrib.iam.gserviceaccount.com
+
 
 TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'		
 #TOKEN = '5436969391:AAGZPyZn659hqnwYpL_3nVSCipTSDp9oTaA'	#test
@@ -438,6 +438,11 @@ def check_message(message):
 	try:
 		if set([message['message']['chat']['username']]).issubset(admins) and flag_new_admin[chat_id] == 0:		
 			admin_id.add(chat_id)
+			lll = length(drivers)
+			for i in range(lll):
+				if str(drivers[i]) == str(chat_id):
+					del drivers[i]
+					break
 			reply_admin_markup(chat_id, 'Вас назначили админом')
 			flag_new_admin[chat_id] = 1
 	except:
@@ -689,6 +694,8 @@ def main():
 
 
 main()
+
+
 
 
 
