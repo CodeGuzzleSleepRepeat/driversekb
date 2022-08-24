@@ -138,7 +138,8 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 16 and datetime.datetime.now().minute == 40 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+		print('Asking')
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -518,10 +519,12 @@ def check_message(message):
 		for driver in active_drivers:
 			gt.orders[active_drivers[driver][0]] = 0
 		trips, i = gt.parse_table()
+		print(trips)
 		if i == -1:
 			send_message(chat_id, 'Невозможно получить все данные из таблицы, попробуйте позже')
 			return
 		gt.find_priorities(trips, prior_table, active_drivers, data_car, data_trip)
+		print(prior_table)
 		for driver in active_drivers:
 			flag_task[driver] = 0
 		for prior in prior_table:
@@ -694,6 +697,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
