@@ -138,7 +138,7 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	if datetime.datetime.now().hour == 16 and datetime.datetime.now().minute == 40 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 16 and datetime.datetime.now().minute == 55 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		print('Asking')
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
