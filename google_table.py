@@ -1136,7 +1136,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		try:
 			drivers[sorted_drivers[0]][3] = i
 		except:
-			return
+			jj = 0
 
  
  
