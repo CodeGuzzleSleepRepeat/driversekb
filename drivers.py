@@ -67,13 +67,11 @@ def reply_ip_markup(chat_id, text):
 	for car in company:
 		if car != '':
 			arr.append([car])
-	print(arr, chat_id)
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def reply_markup_cars(chat_id, text, ip):
-	print(ip, chat_id)
 	arr = []
 	for car in company[ip][1:]:
 		if car != '':
@@ -138,8 +136,7 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
-		print('Asking')
+	if datetime.datetime.now().hour == 15 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -347,7 +344,7 @@ def request_driver(prior, chat_id):
 	try:
 		flag_task[prior_table[prior][3]] = 1
 	except:
-		ii = 0
+		kk = 0
 
 	if gt.check_driver(active_drivers[driver][0], prior_table[prior], prior, data_car, data_trip):
 		inline_keyboard(driver, mes, str(prior))
@@ -378,9 +375,6 @@ def check_message(message):
 		ddd = message['callback_query']['data']
 		if str(message['callback_query']['data']).find('Согласен') > -1:
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
-			#if flag_took[str(chat_id) + '_' + ddd.split('_')[1]] == 1:
-			#	send_message(chat_id, 'Вы уже согласились на другой заказ. Чтобы принять данный заказ - отмените прежний')
-			#	return
 			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 1 
 
 			try:
@@ -388,13 +382,13 @@ def check_message(message):
 					send_message(chat_id, 'Этот заказ уже передан другому исполнителю')
 					return
 			except:
-				j = 0
+				kk = 0
 
-			#if active_drivers[str(chat_id) + '_' + ddd.split('_')[1]][3] == -1:
-			#	active_drivers[str(chat_id) + '_' + ddd.split('_')[1]][3] = int(ddd[len(ddd.split('_')[0]) - 2:].split('_')[0])
+			
 
 			send_message(chat_id, 'Вы назначены на заказ')			
 			send_message(chat_id, 'В случае, если потребуется отказаться от заказа - нажмите Не согласен')
+			print('Sogl ', chat_id)
 			gt.input_data(int(ddd[len(ddd.split('_')[0]) - 2:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			taken_orders += 1
 
@@ -442,8 +436,9 @@ def check_message(message):
 			lll = length(drivers)
 			for i in range(lll):
 				if str(drivers[i]) == str(chat_id):
-					del drivers[i]
+					del drivers[i]	
 					break
+			print('New admin')
 			reply_admin_markup(chat_id, 'Вас назначили админом')
 			flag_new_admin[chat_id] = 1
 	except:
@@ -484,7 +479,6 @@ def check_message(message):
 			send_message(chat_id, 'Введите ФИО водителя')
 		else:
 			cur_driver[chat_id][2] = message['message']['text']
-			#cur_driver[chat_id].append(-1)
 			active_drivers[str(chat_id) + '_' + str(flag_num_cars[chat_id])] = ['', '', '', -1]
 			for i in range(3):
 				active_drivers[str(chat_id) + '_' + str(flag_num_cars[chat_id])][i] = cur_driver[chat_id][i]
@@ -606,9 +600,7 @@ def checking():
 
 	check_time()
 	check_time2()
-	#check_time3()
 	check_driver_time()
-	#update_time = check_updates(update_time)
 
 def main():
 	global admin_id
@@ -663,9 +655,7 @@ def main():
 						flag_start[message['message']['chat']['id']]					
 				except:
 					try:
-						print(message['message']['chat']['id'])
 						flag_start[message['message']['chat']['id']] = 1
-						#flag_task[message['message']['chat']['id']] = 0
 						flag_driver[message['message']['chat']['id']] = 0
 						flag_ready[message['message']['chat']['id']] = 0
 						flag_admin[message['message']['chat']['id']] = 0
@@ -696,6 +686,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
