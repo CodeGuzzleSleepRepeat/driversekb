@@ -113,7 +113,7 @@ def inline_keyboard2(chat_id, text):
 def check_time():
 	global flag_sec
 
-	if datetime.datetime.now().hour == 8 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 9 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -519,12 +519,10 @@ def check_message(message):
 		for driver in active_drivers:
 			gt.orders[active_drivers[driver][0]] = 0
 		trips, i = gt.parse_table()
-		print(trips)
 		if i == -1:
 			send_message(chat_id, 'Невозможно получить все данные из таблицы, попробуйте позже')
 			return
 		gt.find_priorities(trips, prior_table, active_drivers, data_car, data_trip)
-		print(prior_table)
 		for driver in active_drivers:
 			flag_task[driver] = 0
 		for prior in prior_table:
