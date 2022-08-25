@@ -620,6 +620,7 @@ def main():
 
 	admins.add('fcknmaggot')
 	admins.add('as_mironov')
+	admins.add('Logist92')
 
 	f = True
 	flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
