@@ -1016,9 +1016,9 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11] == 'шатл':
 			continue
 
-		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][14]) == 0:
+		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][15]) == 0:
 			continue
-		if data_trip[ind_trip][11] == 'межгород' and len(data_car[ind_car][16]) == 0:
+		if data_trip[ind_trip][11] == 'межгород' and len(data_car[ind_car][17]) == 0:
 			continue
 
 
