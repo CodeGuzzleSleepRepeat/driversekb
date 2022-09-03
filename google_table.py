@@ -323,9 +323,7 @@ def del_driver_from_table(data_car):
 
 
 def add_driver_to_table(cur_driver, prior_table, data_car):
-	#ind_car, ind_trip = find_ind(cur_driver, prior_table, data_car, {})
 	ind_car = find_car_ind(cur_driver, data_car)
-	#ind_trip = find_trip_ind(data[ind], data_trip)
 
 	if ind_car == -1:
 		print('Bad car')
@@ -524,7 +522,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		if i < 10:
 			num = '0' + str(i)
 		try:
-			if data[i][3] == '':# or prev_order(data[i][4], num):
+			if data[i][3] == '' or prev_order(data[i][4], num):
 					continue
 			if data[i][1] != '':
 				taken[data[i][0] + num] = True
