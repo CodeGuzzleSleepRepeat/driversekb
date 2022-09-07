@@ -420,11 +420,11 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			continue
 		
 
-		if len(data_car[ind_car][17]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
+		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
 			continue
-		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11].find('Новоуральск') > -1:
+		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11].find('Новоуральск') > -1:
 			continue
-		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11] == 'шатл':
+		if len(data_car[ind_car][20]) == 0 and data_trip[ind_trip][11] == 'шатл':
 			continue
 
 		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][15]) == 0:
@@ -433,7 +433,7 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			continue
 
 
-		if len(data_car[ind_car][21]) != 0:
+		if len(data_car[ind_car][22]) != 0:
 			sorted_drivers.append(driver)										#Приоритет
 		else:
 			sorted_drivers_sec.append(driver)
@@ -464,11 +464,11 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			ind_car1 = find_car_ind(drivers[sorted_drivers[i]][0], data_car)
 			ind_car2 = find_car_ind(drivers[sorted_drivers[i + 1]][0], data_car)
 			try:
-				num1 = int(data_car[ind_car1][14][22])
+				num1 = int(data_car[ind_car1][14][23])
 			except:
 				num1 = 0
 			try:
-				num2 = int(data_car[ind_car2][14][22])
+				num2 = int(data_car[ind_car2][14][23])
 			except:
 				num2 = 0
 			if data_trip[ind_trip][11] != 'город' and num1 > num2:
@@ -497,11 +497,11 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			ind_car1 = find_car_ind(drivers[sorted_drivers_sec[i]][0], data_car)
 			ind_car2 = find_car_ind(drivers[sorted_drivers_sec[i + 1]][0], data_car)
 			try:
-				num1 = int(data_car[ind_car1][14][22])
+				num1 = int(data_car[ind_car1][14][23])
 			except:
 				num1 = 0
 			try:
-				num2 = int(data_car[ind_car2][14][22])
+				num2 = int(data_car[ind_car2][14][23])
 			except:
 				num2 = 0
 			if data_trip[ind_trip][11] != 'город' and num1 > num2:
