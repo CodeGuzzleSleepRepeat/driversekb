@@ -516,6 +516,7 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 
 def find_priorities(data, prior_table, drivers, data_car, data_trip):
+	prior_table.clear()
 	length = len(data)
 	for i in range(length):
 		num = str(i)
