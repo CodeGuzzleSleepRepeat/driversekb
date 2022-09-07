@@ -389,6 +389,16 @@ def check_message(message):
 			send_message(chat_id, 'Вы назначены на заказ')			
 			send_message(chat_id, 'В случае, если потребуется отказаться от заказа - нажмите Не согласен')
 			print('Sogl ', chat_id)
+			llll = len(ddd.split('_')[0])
+			num_of_nums = 0
+			for i in range(llll):
+				try:
+					int(ddd[llll - i - 1])
+					num_of_nums += 1
+				except:
+					break
+			if ddd.find('ЕКБ склад') == 0:
+				num_of_nums -= 1
 			gt.input_data(int(ddd[len(ddd.split('_')[0]) - 2:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			taken_orders += 1
 
