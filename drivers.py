@@ -110,7 +110,6 @@ def inline_keyboard2(chat_id, text):
 
 def check_time():
 	global flag_sec
-	
 	try:
 		flag_date[datetime.date.today().strftime("%d.%m.%y")]
 	except:
@@ -141,11 +140,11 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
-	
 	try:
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")]
 	except:
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
+
 	if datetime.datetime.now().hour == 15 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
@@ -348,6 +347,7 @@ def request_driver(prior, chat_id):
 	try:
 		driver = prior_table[prior][3]
 	except:
+		print(prior)
 		no_drivers_alert(prior)
 		return
 
@@ -398,7 +398,6 @@ def check_message(message):
 
 			send_message(chat_id, 'Вы назначены на заказ')			
 			send_message(chat_id, 'В случае, если потребуется отказаться от заказа - нажмите Не согласен')
-			print('Sogl ', chat_id)
 			llll = len(ddd.split('_')[0])
 			num_of_nums = 0
 			for i in range(llll):
@@ -409,7 +408,7 @@ def check_message(message):
 					break
 			if ddd.find('ЕКБ склад') == 0:
 				num_of_nums -= 1
-			gt.input_data(int(ddd[len(ddd.split('_')[0]) - 2:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
+			gt.input_data(int(ddd[llll - num_of_nums:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			taken_orders += 1
 
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
@@ -430,7 +429,7 @@ def check_message(message):
 
 		if message['callback_query']['data'] == 'Да':
 			flag_driver[chat_id] = 0
-			flag_ready[chat_id] = 1
+			#flag_ready[chat_id] = 1
 			for car in company:
 				if company[car][0] == chat_id:
 					cur_company = car
@@ -464,10 +463,12 @@ def check_message(message):
 	except:
 		jj = 0
 
+	'''
 	if message['message']['text'] == 'Добавить машину':
 		send_message(chat_id, 'Введите номер машины')
 		flag_new_car[chat_id] = 1
 		return
+	
 	if flag_new_car[chat_id] == 1:
 		flag_new_car[chat_id] = 0
 		for car in company:
@@ -480,10 +481,10 @@ def check_message(message):
 		company[cur_company].append(message['message']['text'])
 		reply_markup_cars(chat_id, 'Машина успешно добавлена', cur_company)
 		return
-
+	'''
 
 	if not set([str(chat_id) + '_' + str(flag_num_cars[chat_id])]).issubset(active_drivers) and flag_ready[chat_id] == 1:
-		if flag_driver[chat_id] == 0:
+		if flag_driver[chat_id] == 0 and set([message['message']['text']]).issubset(company):
 			cur_driver[chat_id] = ['', message['message']['text'], '', -1]
 			try:
 				company[message['message']['text']][0] = chat_id
@@ -706,6 +707,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
