@@ -110,6 +110,11 @@ def inline_keyboard2(chat_id, text):
 
 def check_time():
 	global flag_sec
+	
+	try:
+		flag_date[datetime.date.today().strftime("%d.%m.%y")]
+	except:
+		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
 
 	if datetime.datetime.now().hour == 11 and datetime.datetime.now().minute == 30 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
@@ -136,6 +141,11 @@ def check_time():
 			flag_ready[driver] = 0
 
 def check_time2():
+	
+	try:
+		flag_date2[datetime.date.today().strftime("%d.%m.%y")]
+	except:
+		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
 	if datetime.datetime.now().hour == 15 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
