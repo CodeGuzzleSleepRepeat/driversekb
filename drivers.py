@@ -115,7 +115,7 @@ def check_time():
 	except:
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 11 and datetime.datetime.now().minute == 30 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 11 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -335,7 +335,17 @@ def reject_driver(chat_id, prior, text):
 		return
 
 def form_mes(data, prior):
-	return 'Маршрут: ' + str(prior)[:len(prior) - 2] + '\nОбъем: ' + str(data[0]) + '\nВремя: ' + str(data[1]) + '\nВорота: ' + str(data[2])
+	llll = len(prior)
+	num_of_nums = 0
+	for i in range(llll):
+		try:
+			int(prior[llll - i - 1])
+			num_of_nums += 1
+		except:
+			break
+		if prior.find('ЕКБ склад') == 0:
+			num_of_nums -= 1
+	return 'Маршрут: ' + str(prior)[:len(prior) - num_of_nums] + '\nОбъем: ' + str(data[0]) + '\nВремя: ' + str(data[1]) + '\nВорота: ' + str(data[2])
 
 def request_driver(prior, chat_id):
 	global num_of_orders
@@ -629,11 +639,11 @@ def main():
 	global data_car
 	global flag_sec
 
-	#gt.north = gt.get_north()
 
 	admins.add('fcknmaggot')
 	admins.add('as_mironov')
 	admins.add('Logist92')
+	admins.add('Antibi96')
 
 	f = True
 	flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
@@ -707,6 +717,8 @@ def main():
 
 
 main()
+
+
 
 
 
