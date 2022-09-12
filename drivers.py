@@ -49,18 +49,21 @@ flag_sec = 0
 num_of_orders = 0
 taken_orders = 0
 
+proxies = {
+	'http' : 'http://proxy.server:3128'
+}
 
 def get_updates(offset=0):
-	result = requests.get(f'{URL}{TOKEN}/getUpdates?offset={offset}').json()
+	result = requests.get(f'{URL}{TOKEN}/getUpdates?offset={offset}', proxies=proxies).json()
 	return result['result']
 
 def send_message(chat_id, text):
-	return requests.get(f'{URL}{TOKEN}/sendMessage?chat_id={chat_id}&text={text}')
+	return requests.get(f'{URL}{TOKEN}/sendMessage?chat_id={chat_id}&text={text}', proxies=proxies)
 
 def reply_markup(chat_id, text):
 	reply_markup = { "keyboard": [['Изменить данные']], "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
 
 def reply_ip_markup(chat_id, text):
 	arr = []
@@ -69,7 +72,7 @@ def reply_ip_markup(chat_id, text):
 			arr.append([car])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
 
 def reply_markup_cars(chat_id, text, ip):
 	arr = []
@@ -78,17 +81,17 @@ def reply_markup_cars(chat_id, text, ip):
 			arr.append([car])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
 
 def reply_markup2(chat_id, text):
 	reply_markup = { "keyboard": [['Не согласен']], "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
 
 def reply_admin_markup(chat_id, text):
 	reply_markup = { "keyboard": [['Начать распределение'], ['Добавить админа'], ['Удалить админа'], ['Показать админов']], "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
 
 def inline_keyboard(chat_id, text, id_trip):
 	id_num = chat_id.split('_')[1]
@@ -104,9 +107,7 @@ def inline_keyboard(chat_id, text, id_trip):
 def inline_keyboard2(chat_id, text):
 	reply_markup = {'inline_keyboard': [[{'text' : 'Да', 'callback_data' : 'Да'}, {'text' : 'Нет', 'callback_data' : 'Нет'}]]}
 	data = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.get(f'{URL}{TOKEN}/sendMessage', data = data)
-
-
+	return requests.get(f'{URL}{TOKEN}/sendMessage', data = data, proxies=proxies)
 
 def check_time():
 	global flag_sec
