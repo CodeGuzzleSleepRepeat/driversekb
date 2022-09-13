@@ -49,6 +49,7 @@ flag_sec = 0
 num_of_orders = 0
 taken_orders = 0
 
+
 proxies = {
 	'http' : 'http://proxy.server:3128'
 }
@@ -109,6 +110,8 @@ def inline_keyboard2(chat_id, text):
 	data = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.get(f'{URL}{TOKEN}/sendMessage', data = data, proxies=proxies)
 
+
+
 def check_time():
 	global flag_sec
 	try:
@@ -116,7 +119,7 @@ def check_time():
 	except:
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 11 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 23 and datetime.datetime.now().minute == 21 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -134,6 +137,7 @@ def check_time():
 				reply_ip_markup(driver, 'Готовы ли вы работать завтра утром? Если да - выберите ИП')
 
 		active_drivers.clear()
+
 	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
 		flag_sec = 0
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
@@ -146,7 +150,7 @@ def check_time2():
 	except:
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 15 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 7 and datetime.datetime.now().minute == 19 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -503,6 +507,7 @@ def check_message(message):
 				send_message(chat_id, 'Такого ИП нет в базе, проверьте правильность введенных данных')
 				return
 			#cur_driver[chat_id].append(message['message']['text'])
+			print(flag_driver[chat_id], message['message']['text'])
 			reply_markup_cars(chat_id, 'Выберите машину', message['message']['text'])
 			flag_driver[chat_id] = 1
 		elif flag_driver[chat_id] == 1:
@@ -534,6 +539,7 @@ def check_message(message):
 
 
 	if message['message']['text'] == 'Начать распределение' and set([chat_id]).issubset(admin_id):
+		print(active_drivers)
 		taken_orders = 0
 		num_of_orders = 0
 		flag_admin[chat_id] = 0
@@ -718,6 +724,9 @@ def main():
 
 
 main()
+
+
+
 
 
 
