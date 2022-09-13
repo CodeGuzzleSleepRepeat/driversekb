@@ -221,7 +221,7 @@ def check_updates():
 	changes_new, i = gt.parse_changes()
 	length = len(changes)
 	length2 = len(changes_new)
-	for i in range(length):
+	for i in range(min(length, length2)):
 		if changes_new[i][1:] == changes[i][1:] or (changes_new[1] == '' and changes_new[2] == '' and changes_new[3] == ''):
 			to_del.append(i)			
 		else:
