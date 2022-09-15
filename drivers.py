@@ -32,6 +32,9 @@ flag_start = {}
 flag_date = {}
 flag_date2 = {}
 flag_date3 = {}
+flag_date4 = {}
+flag_date5 = {}
+flag_date6 = {}
 flag_task = {}
 flag_driver = {}
 flag_ready = {}
@@ -119,7 +122,7 @@ def check_time():
 	except:
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 23 and datetime.datetime.now().minute == 21 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 10 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -150,7 +153,7 @@ def check_time2():
 	except:
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 7 and datetime.datetime.now().minute == 19 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 11 and datetime.datetime.now().minute == 0 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -174,7 +177,95 @@ def check_time2():
 			flag_ready[driver] = 0
 
 def check_time3():
-	if datetime.datetime.now().hour == 13 and datetime.datetime.now().minute == 5 and flag_date3[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	try:
+		flag_date3[datetime.date.today().strftime("%d.%m.%y")]
+	except:
+		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
+	if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 0 and flag_date3[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 1
+		try:
+			gt.del_driver_from_table(data_car)
+		except:
+			ii = 0
+		for driver in drivers:
+			flag_ready[driver] = 1
+
+			for car in company:
+				if company[car][0] == driver:
+					flag_driver[driver] = 1
+					reply_markup_cars(driver, 'Готовы ли вы работать завтра утром? Если да - выберите, пожалуйста, номер машины', car)
+					break
+			else:
+				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
+
+		active_drivers.clear()
+	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
+		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
+		for driver in drivers:
+			flag_ready[driver] = 0
+
+def check_time4():
+	try:
+		flag_date4[datetime.date.today().strftime("%d.%m.%y")]
+	except:
+		flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 0
+	if datetime.datetime.now().hour == 13 and datetime.datetime.now().minute == 0 and flag_date4[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+		flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 1
+		try:
+			gt.del_driver_from_table(data_car)
+		except:
+			ii = 0
+		for driver in drivers:
+			flag_ready[driver] = 1
+
+			for car in company:
+				if company[car][0] == driver:
+					flag_driver[driver] = 1
+					reply_markup_cars(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите, пожалуйста, номер машины', car)
+					break
+			else:
+				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
+
+		active_drivers.clear()
+	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
+		flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 0
+		for driver in drivers:
+			flag_ready[driver] = 0
+
+def check_time5():
+	try:
+		flag_date5[datetime.date.today().strftime("%d.%m.%y")]
+	except:
+		flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 0
+	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 0 and flag_date5[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+		flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 1
+		try:
+			gt.del_driver_from_table(data_car)
+		except:
+			ii = 0
+		for driver in drivers:
+			flag_ready[driver] = 1
+
+			for car in company:
+				if company[car][0] == driver:
+					flag_driver[driver] = 1
+					reply_markup_cars(driver, 'Готовы ли вы работать завтра утром? Если да - выберите, пожалуйста, номер машины', car)
+					break
+			else:
+				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
+
+		active_drivers.clear()
+	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
+		flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 0
+		for driver in drivers:
+			flag_ready[driver] = 0
+
+def check_time6():
+	try:
+		flag_date6[datetime.date.today().strftime("%d.%m.%y")]
+	except:
+		flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
+	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 0 and flag_date6[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -193,7 +284,7 @@ def check_time3():
 
 		active_drivers.clear()
 	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
-		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
+		flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
 		for driver in drivers:
 			flag_ready[driver] = 0
 
@@ -222,7 +313,10 @@ def check_updates():
 	update_time = datetime.datetime.now()
 	to_del = []
 	print('Parsing changes')
-	changes_new, i = gt.parse_changes()
+	try:
+		changes_new, i = gt.parse_changes()
+	except:
+		return
 	length = len(changes)
 	length2 = len(changes_new)
 	for i in range(min(length, length2)):
@@ -638,6 +732,10 @@ def checking():
 
 	check_time()
 	check_time2()
+	check_time3()
+	check_time4()
+	check_time5()
+	check_time6()
 	check_driver_time()
 
 def main():
@@ -657,6 +755,10 @@ def main():
 	flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
 
 	flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
+	flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 0
+	flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 0
+
+	flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
 
 	data_trip, data_car = gt.parse_secondary()
 	prepare_cars()
@@ -724,6 +826,8 @@ def main():
 
 
 main()
+
+
 
 
 
