@@ -66,14 +66,15 @@ def parse_table():
 
 def parse_changes():
 	counter = 0
-	try:
-		sh = gc.open("DriversDistribTable").get_worksheet(0)
-	except:
-		if counter == 20:
-			print('Something went wrong in parsing changes')
-			return data, -1
-		time.sleep(10)
-		counter += 1
+	while True:
+		try:
+			sh = gc.open("DriversDistribTable").get_worksheet(0)
+		except:
+			if counter == 10:
+				print('Something went wrong in parsing changes')
+				return data, -1
+			time.sleep(10)
+			counter += 1
 	data_changes = sh.get_all_values()[2:]
 	res_data = []
 	i = 0
