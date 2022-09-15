@@ -57,7 +57,7 @@ def parse_table():
 			else:
 				num_of_days[num] = 0
 
-			if line[0][2] == '.' and len(line[0]) == 5:
+			if line[0][2] == '.':
 				flag = True
 			res_data.append([line[0], line[1], line[2], line[3], line[4], line[5]])
 		except:
