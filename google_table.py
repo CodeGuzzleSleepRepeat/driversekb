@@ -33,14 +33,16 @@ def prev_order(str, prior):
 def parse_table():
 	counter = 0
 	flag = False
-	try:
-		sh = gc.open("DriversDistribTable").get_worksheet(0)
-	except:
-		if counter == 20:
-			print('Something went wrong in parsing changes')
-			return data, -1
-		time.sleep(10)
-		counter += 1
+	while True:
+		try:
+			sh = gc.open("DriversDistribTable").get_worksheet(0)
+			break
+		except:
+			if counter == 10:
+				print('Something went wrong in parsing changes')
+				return data, -1
+			time.sleep(10)
+			counter += 1
 	data_changes = sh.get_all_values()[2:]
 	res_data = []
 	i = 0
@@ -69,6 +71,7 @@ def parse_changes():
 	while True:
 		try:
 			sh = gc.open("DriversDistribTable").get_worksheet(0)
+			break
 		except:
 			if counter == 10:
 				print('Something went wrong in parsing changes')
