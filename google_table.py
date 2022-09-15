@@ -349,6 +349,7 @@ def check_driver(driver, line, prior, data_car, data_trip):
 	try:
 		if orders[driver] == 1:
 			return False
+		orders[driver] = 1
 	except:
 		orders[driver] = 0
 
@@ -360,8 +361,6 @@ def check_driver(driver, line, prior, data_car, data_trip):
 	if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
 		#print('time', data_car[ind_car][0])
 		return False
-
-	orders[driver] = 1
 	return True
 
 def find_best(ind_trip, line, drivers, i, data_car, data_trip):
