@@ -122,7 +122,7 @@ def check_time():
 	except:
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 10 and datetime.datetime.now().minute == 0 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 16 and datetime.datetime.now().minute == 30 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -153,7 +153,7 @@ def check_time2():
 	except:
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 11 and datetime.datetime.now().minute == 0 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 17 and datetime.datetime.now().minute == 30 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -732,7 +732,7 @@ def checking():
 
 	check_time()
 	check_time2()
-	check_time3()
+	#check_time3()
 	#check_time4()
 	#check_time5()
 	#check_time6()
