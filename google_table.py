@@ -350,14 +350,22 @@ def check_driver(driver, line, prior, data_car, data_trip):
 	except:
 		orders[driver] = 0
 
-	if timing[ind_car][0] > datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - 2:]]):									# Время
-		#print('time', data_car[ind_car][0])
+	num_of_nums = 0
+	llll = len(prior)
+	for i in range(llll):
+		try:
+			int(prior[llll - i - 1])
+			num_of_nums += 1
+		except:
+			break
+	if timing[ind_car][0] > datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):									# Время
+		
 		return False
 
-	#if timing[ind_car][0] == datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - 2:]]):
 	if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
-		#print('time', data_car[ind_car][0])
+		
 		return False
+
 	return True
 
 def find_best(ind_trip, line, drivers, i, data_car, data_trip):
