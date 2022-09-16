@@ -32,7 +32,7 @@ def prev_order(str, prior):
 
 def parse_table():
 	counter = 0
-	flag = False
+	flag = 0
 	while True:
 		try:
 			sh = gc.open("DriversDistribTable").get_worksheet(0)
@@ -52,13 +52,10 @@ def parse_table():
 			if i < 10:
 				num = '0' + num
 
-			if flag:
-				num_of_days[num] = 1
-			else:
-				num_of_days[num] = 0
+			num_of_days[num] = flag
 
 			if line[0][2] == '.':
-				flag = True
+				flag += 1
 			res_data.append([line[0], line[1], line[2], line[3], line[4], line[5]])
 		except:
 			continue
