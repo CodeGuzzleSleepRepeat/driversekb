@@ -733,9 +733,9 @@ def checking():
 	check_time()
 	check_time2()
 	check_time3()
-	check_time4()
-	check_time5()
-	check_time6()
+	#check_time4()
+	#check_time5()
+	#check_time6()
 	check_driver_time()
 
 def main():
