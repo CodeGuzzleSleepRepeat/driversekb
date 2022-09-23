@@ -763,6 +763,8 @@ def main():
 	data_trip, data_car = gt.parse_secondary()
 	prepare_cars()
 	print(datetime.datetime.now())
+	
+	send_message(group_id, 'Бот запущен')
 
 	while f: 
 	    try:
