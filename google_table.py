@@ -363,7 +363,7 @@ def check_driver(driver, line, prior, data_car, data_trip):
 		return False
 
 	if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
-		
+		print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
 		return False
 
 	return True
