@@ -358,13 +358,13 @@ def check_driver(driver, line, prior, data_car, data_trip):
 		except:
 			break
 	if timing[ind_car][0] > datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):									# Время
-		
+		print('Here', prior)
 		return False
 
 	if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
 		print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
 		return False
-	
+	print('Success', prior)
 	orders[driver] = 1
 	return True
 
@@ -413,16 +413,12 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 		if len(data_trip[ind_trip][13]) == 0 and data_car[ind_car][20] == 'т20':		#Тип машины
 			continue
 		if len(data_trip[ind_trip][14]) == 0 and data_car[ind_car][20] == 'т30':
-			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][15]) == 0 and data_car[ind_car][20] == 'т40':
-			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][16]) == 0 and data_car[ind_car][20] == 'т50':
-			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][17]) == 0 and data_car[ind_car][20] == 'фура':
-			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][12]) == 0 and data_car[ind_car][20] == 'фургон':
 			continue
