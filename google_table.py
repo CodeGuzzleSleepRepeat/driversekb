@@ -357,14 +357,18 @@ def check_driver(driver, line, prior, data_car, data_trip):
 			num_of_nums += 1
 		except:
 			break
-	if timing[ind_car][0] > datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):									# Время
-		print('Here', prior)
-		return False
-
-	if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
-		print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
-		return False
-	print('Success', prior)
+	try:
+		if timing[ind_car][0] > datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):									# Время
+			#print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
+			return False
+	except:
+		pass
+	try:
+		if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
+			#print(int(timing[ind_car][1].split(':')[0]), int(line[1].split(':')[0]))
+			return False
+	except:
+		pass
 	orders[driver] = 1
 	return True
 
