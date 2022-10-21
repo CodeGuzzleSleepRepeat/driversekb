@@ -20,6 +20,7 @@ orders = {}
 num_of_days = {}
 taken = {}
 
+today = datetime.datetime.today()
 
 def prev_order(str, prior):
 	hm = str.split(':')
@@ -31,6 +32,8 @@ def prev_order(str, prior):
 	return False
 
 def parse_table():
+	global today
+	
 	counter = 0
 	flag = 0
 	while True:
@@ -43,9 +46,12 @@ def parse_table():
 				return data, -1
 			time.sleep(10)
 			counter += 1
-	data_changes = sh.get_all_values()[2:]
+	data_changes = sh.get_all_values()[1:]
+	today = datetime.datetime.strptime(data_changes[0][0], "%d.%m.%Y")
+	print('Today', today)
 	res_data = []
 	i = 0
+	data_changes = data_changes[1:]
 	for line in data_changes:
 		try:
 			num = str(i)
@@ -60,7 +66,6 @@ def parse_table():
 		except:
 			continue
 		i += 1
-	print(i)
 	return res_data, i
 
 def parse_changes():
@@ -90,7 +95,6 @@ def parse_changes():
 		except:
 			continue
 		i += 1
-	print(i)
 	return res_data, i
 
 
@@ -324,7 +328,9 @@ def del_driver_from_table(data_car):
 
 
 def add_driver_to_table(cur_driver, prior_table, data_car):
+	#ind_car, ind_trip = find_ind(cur_driver, prior_table, data_car, {})
 	ind_car = find_car_ind(cur_driver, data_car)
+	#ind_trip = find_trip_ind(data[ind], data_trip)
 
 	if ind_car == -1:
 		print('Bad car')
@@ -342,8 +348,12 @@ def add_driver_to_table(cur_driver, prior_table, data_car):
 	return 0
 
 def check_driver(driver, line, prior, data_car, data_trip):
+	global today
+
 	ind_car = find_car_ind(driver, data_car)
+	print('Check', prior, orders)
 	try:
+		print(driver)
 		if orders[driver] == 1:
 			return False
 	except:
@@ -351,6 +361,7 @@ def check_driver(driver, line, prior, data_car, data_trip):
 
 	num_of_nums = 0
 	llll = len(prior)
+	print(llll)
 	for i in range(llll):
 		try:
 			int(prior[llll - i - 1])
@@ -358,17 +369,23 @@ def check_driver(driver, line, prior, data_car, data_trip):
 		except:
 			break
 	try:
-		if timing[ind_car][0] > datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):									# Время
-			#print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
+		print('Day look here', timing[ind_car][0], today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]))
+		if timing[ind_car][0] > today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):									# Время
+			print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
 			return False
+		if timing[ind_car][0] < today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):	
+			orders[driver] = 1
+			return True
 	except:
 		pass
 	try:
 		if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
-			#print(int(timing[ind_car][1].split(':')[0]), int(line[1].split(':')[0]))
+			print(int(timing[ind_car][1].split(':')[0]), int(line[1].split(':')[0]))
 			return False
 	except:
 		pass
+
+
 	orders[driver] = 1
 	return True
 
@@ -382,15 +399,17 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for driver in drivers:
 		ind_car = find_car_ind(drivers[driver][0], data_car)
-
 		try:
 			if len(data_car[ind_car][5]) == 0 and line[1] == '10':
-					continue
+				print('Hello0')
+				continue
 			if line[1][len(line[1]) - 1] == '+' or line[1][len(line[1]) - 1] == '-':
 				#line[1] = line[1][:len(line[1]) - 1]
 				if len(data_car[ind_car][6]) == 0 and line[1] == '20-':		#Грузоподъемность
+					print('Hello1')
 					continue
 				if len(data_car[ind_car][7]) == 0 and line[1] == '20+':
+					print('Hello2')
 					continue
 				if len(data_car[ind_car][8]) == 0 and line[1] == '30-':
 					continue
@@ -406,38 +425,49 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 					continue
 			elif line[1] == 'фура':
 				if len(data_car[ind_car][14]) == 0:
+					print('Hello5')
 					continue
 			elif int(data_car[ind_car][2]) < int(line[1]):
-				#print('Vol', data_car[ind_car][0], line[1], int(line[1]))
+				print('Vol', data_car[ind_car][0], line[1], int(line[1]))
 				continue
 		except:
 			time.sleep(0.1)
 			continue
 		
 		if len(data_trip[ind_trip][13]) == 0 and data_car[ind_car][20] == 'т20':		#Тип машины
+			print('Hello6')
 			continue
 		if len(data_trip[ind_trip][14]) == 0 and data_car[ind_car][20] == 'т30':
+			print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][15]) == 0 and data_car[ind_car][20] == 'т40':
+			print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][16]) == 0 and data_car[ind_car][20] == 'т50':
+			print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][17]) == 0 and data_car[ind_car][20] == 'фура':
+			print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][12]) == 0 and data_car[ind_car][20] == 'фургон':
 			continue
 		
 
-		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
+		if len(data_car[ind_car][1]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
+			print('Hello7')
 			continue
 		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11].find('Новоуральск') > -1:
+			print('Hello8')
 			continue
 		if len(data_car[ind_car][20]) == 0 and data_trip[ind_trip][11] == 'шатл':
+			print('Hello9')
 			continue
 
 		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][15]) == 0:
+			print('Hello10')
 			continue
 		if data_trip[ind_trip][11] == 'межгород' and len(data_car[ind_car][17]) == 0:
+			print('Hello11')
 			continue
 
 
@@ -452,16 +482,16 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for i in range(length_1):
 		ind_car = find_car_ind(drivers[sorted_drivers[i]][0], data_car)
-		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] == 'v':					#Тип поездки
+		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][15] == 'v':					#Тип поездки
 			tmp = sorted_drivers[i]
 			del sorted_drivers[i]
 			sorted_drivers.insert(0, tmp)
 			
-		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] != 'v' and data_car[ind_car][15] != 'v':			
+		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][15] != 'v' and data_car[ind_car][16] != 'v':			
 			tmp = sorted_drivers[i]
 			del sorted_drivers[i]
 			sorted_drivers.append(tmp)
-		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][14] == 'v':
+		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][15] == 'v':
 			tmp = sorted_drivers[i]
 			del sorted_drivers[i]
 			sorted_drivers.append(tmp)
@@ -532,7 +562,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 			num = '0' + str(i)
 		try:
 			if data[i][3] == '' or prev_order(data[i][4], num):
-					continue
+				continue
 			if data[i][1] != '':
 				taken[data[i][0] + num] = True
 				continue
@@ -558,6 +588,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		except:
 			jj = 0
 
+ 
  
  
  
