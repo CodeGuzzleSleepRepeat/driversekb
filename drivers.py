@@ -312,7 +312,6 @@ def check_updates():
 
 	update_time = datetime.datetime.now()
 	to_del = []
-	print('Parsing changes')
 	try:
 		changes_new, i = gt.parse_changes()
 	except:
