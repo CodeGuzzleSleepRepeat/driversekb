@@ -680,6 +680,7 @@ def check_message(message):
 		flag_admin[chat_id] = 0
 		if message['message']['text'][0] != '@':
 			send_message(chat_id, 'Неправильный ник')
+			return
 		admins.discard(message['message']['text'][1:])
 		send_message(chat_id, 'Админ успешно удален')
 		for driver in drivers:
