@@ -120,7 +120,7 @@ def parse_secondary():
 
 	len_car = len(data_car)
 	for i in range(len_car):
-		timing[i] = [datetime.datetime.today(), '-1']
+		timing[i] = [datetime.date.today(), '-1']
 
 	return data_trip, data_car
 
@@ -225,7 +225,7 @@ def get_return_time(data_trip, ind_trip):
 		num = 1
 	elif data_trip[ind_trip][9] == 'Возврат на третий день':
 		num = 2
-	return_day = datetime.datetime.today() + datetime.timedelta(days = num)
+	return_day = datetime.date.today() + datetime.timedelta(days = num)
 	
 
 	return_time = data_trip[ind_trip][10][3:]
