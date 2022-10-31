@@ -14,6 +14,7 @@ URL = 'https://api.telegram.org/bot'
 
 group_id = -757291925
 update_time = datetime.datetime.now()
+update_time2 = datetime.datetime.now()
 drivers = []
 trips = []
 changes = []
@@ -737,13 +738,19 @@ def checking():
 	#check_time5()
 	#check_time6()
 	check_driver_time()
+def new_drivers():
+	global data_trip
+	global data_car
+	data_trip, data_car = gt.parse_secondary()
+	prepare_cars()
 
 def main():
 	global admin_id
 	global data_trip
 	global data_car
 	global flag_sec
-
+	global update_time
+	global update_time2
 
 	admins.add('fcknmaggot')
 	admins.add('as_mironov')
@@ -762,8 +769,9 @@ def main():
 
 	data_trip, data_car = gt.parse_secondary()
 	prepare_cars()
+	update_time2 = datetime.datetime.now()
 	print(datetime.datetime.now())
-	
+
 	send_message(group_id, 'Бот запущен')
 
 	while f: 
@@ -782,11 +790,13 @@ def main():
 				if (datetime.datetime.now() - update_time).total_seconds() > 180:
 					thread_update = Thread(target = check_updates, args = [])
 					thread_update.start()
-				if (datetime.datetime.now() - update_time).total_seconds() > 1800:
-					data_trip, data_car = gt.parse_secondary()
-					prepare_cars()
+				if (datetime.datetime.now() - update_time2).total_seconds() > 1800:					
+					update_time2 = datetime.datetime.now()
+					thread_new_dri = Thread(target = new_drivers, args = [])
+					thread_new_dri.start()
 			except:
 				k = 0
+
 
 			messages = get_updates(update_id)
 			for message in messages:
