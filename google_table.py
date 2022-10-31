@@ -20,7 +20,7 @@ orders = {}
 num_of_days = {}
 taken = {}
 
-today = datetime.datetime.today()
+today = datetime.date.today()
 
 def prev_order(str, prior):
 	hm = str.split(':')
@@ -33,7 +33,7 @@ def prev_order(str, prior):
 
 def parse_table():
 	global today
-	
+
 	counter = 0
 	flag = 0
 	while True:
@@ -225,8 +225,9 @@ def get_return_time(data_trip, ind_trip):
 		num = 1
 	elif data_trip[ind_trip][9] == 'Возврат на третий день':
 		num = 2
+
 	return_day = datetime.date.today() + datetime.timedelta(days = num)
-	
+	print(num - 3, return_day)
 
 	return_time = data_trip[ind_trip][10][3:]
 	if return_time == '':
@@ -361,7 +362,6 @@ def check_driver(driver, line, prior, data_car, data_trip):
 
 	num_of_nums = 0
 	llll = len(prior)
-	print(llll)
 	for i in range(llll):
 		try:
 			int(prior[llll - i - 1])
@@ -369,11 +369,11 @@ def check_driver(driver, line, prior, data_car, data_trip):
 		except:
 			break
 	try:
-		print('Day look here', timing[ind_car][0], today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]))
-		if timing[ind_car][0] > today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):									# Время
+		print(timing[ind_car][0], (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date())
+		if timing[ind_car][0] > (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():									# Время
 			print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
 			return False
-		if timing[ind_car][0] < today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]]):	
+		if timing[ind_car][0] < (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():	
 			orders[driver] = 1
 			return True
 	except:
@@ -487,14 +487,14 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			del sorted_drivers[i]
 			sorted_drivers.insert(0, tmp)
 			
-		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][15] != 'v' and data_car[ind_car][16] != 'v':			
+		if data_car[ind_car][15] == 'v' and data_car[ind_car][17] == 'v':			
 			tmp = sorted_drivers[i]
 			del sorted_drivers[i]
 			sorted_drivers.append(tmp)
-		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][15] == 'v':
+		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][17] == 'v':
 			tmp = sorted_drivers[i]
 			del sorted_drivers[i]
-			sorted_drivers.append(tmp)
+			sorted_drivers.insert(0, tmp)
 			
 
 	for j in range(length_1):
@@ -517,18 +517,18 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for i in range(length_2):
 		ind_car = find_car_ind(drivers[sorted_drivers_sec[i]][0], data_car)
-		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] == 'v':					#Тип поездки
+		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][15] == 'v':					#Тип поездки
 			tmp = sorted_drivers_sec[i]
 			del sorted_drivers_sec[i]
 			sorted_drivers_sec.insert(0, tmp)
-		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] != 'v' and data_car[ind_car][15] != 'v':	
+		if data_car[ind_car][15] == 'v' and data_car[ind_car][17] == 'v':	
 			tmp = sorted_drivers_sec[i]
 			del sorted_drivers_sec[i]
 			sorted_drivers_sec.append(tmp)
-		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][14] == 'v':
+		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][17] == 'v':
 			tmp = sorted_drivers_sec[i]
 			del sorted_drivers_sec[i]
-			sorted_drivers_sec.append(tmp)
+			sorted_drivers_sec.insert(0, tmp)
 
 	for j in range(length_2):
 		for i in range(length_2 - 1):											#Километраж за неделю
@@ -588,6 +588,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		except:
 			jj = 0
 
+ 
  
  
  
