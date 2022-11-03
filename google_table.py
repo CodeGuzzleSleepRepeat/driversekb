@@ -529,7 +529,7 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			tmp = sorted_drivers_sec[i]
 			del sorted_drivers_sec[i]
 			sorted_drivers_sec.insert(0, tmp)
-			
+
 	for j in range(length_2):
 		for i in range(length_2 - 1):											#Километраж за неделю
 			ind_car1 = find_car_ind(drivers[sorted_drivers_sec[i]][0], data_car)
@@ -588,6 +588,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		except:
 			jj = 0
 
+ 
  
  
  
