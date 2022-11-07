@@ -81,9 +81,10 @@ def reply_ip_markup(chat_id, text):
 
 def reply_markup_cars(chat_id, text, ip):
 	arr = []
-	for car in company[ip][1:]:
-		if car != '':
-			arr.append([car])
+	#for car in company[ip][1:]:
+	#	if car != '':
+	#		arr.append([car])
+	arr.append([company[ip][1]])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
@@ -801,7 +802,7 @@ def main():
 				k = 0
 
 
-			messages = get_updates(update_id)
+			messages = get_updates(update_id + 1)
 			for message in messages:
 				if update_id < message['update_id']:
 					update_id = message['update_id']
