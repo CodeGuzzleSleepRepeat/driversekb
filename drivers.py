@@ -772,6 +772,10 @@ def main():
 	flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
 
 	data_trip, data_car = gt.parse_secondary()
+	len_car = len(data_car)
+	for i in range(len_car):
+		gt.timing[i] = [datetime.date.today(), '-1']
+
 	prepare_cars()
 	update_time2 = datetime.datetime.now()
 	print(datetime.datetime.now())
