@@ -118,10 +118,6 @@ def parse_secondary():
 		line[1] = line[2]
 		line[2] = tmp
 
-	len_car = len(data_car)
-	for i in range(len_car):
-		timing[i] = [datetime.date.today(), '-1']
-
 	return data_trip, data_car
 
 
