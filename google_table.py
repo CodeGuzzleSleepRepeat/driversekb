@@ -365,6 +365,11 @@ def check_driver(driver, line, prior, data_car, data_trip):
 		except:
 			break
 	try:
+		if timing[ind_car][0] < 0:
+			timing[ind_car][0] = (today + datetime.timedelta(-1 + num_of_days[prior[len(prior) - num_of_nums:]])).date()
+	except:
+		pass
+	try:
 		print(timing[ind_car][0], (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date())
 		if timing[ind_car][0] > (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():									# Время
 			print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
@@ -567,7 +572,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 				taken[data[i][0] + num] = True
 				continue
 		except:
-			kk = 0
+			pass
 
 		taken[data[i][0] + num] = False
 
