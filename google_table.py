@@ -480,15 +480,17 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for i in range(length_1):
 		ind_car = find_car_ind(drivers[sorted_drivers[i]][0], data_car)
+		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):			
+			tmp = sorted_drivers[i]
+			del sorted_drivers[i]
+			sorted_drivers.append(tmp)
+			continue
 		if data_trip[ind_trip][11] == 'город' and (data_car[ind_car][15] == 'v' or data_car[ind_car][15] == 'vv'):					#Тип поездки
 			tmp = sorted_drivers[i]
 			del sorted_drivers[i]
 			sorted_drivers.insert(0, tmp)
 			
-		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):			
-			tmp = sorted_drivers[i]
-			del sorted_drivers[i]
-			sorted_drivers.append(tmp)
+		
 		if data_trip[ind_trip][11] != 'город' and (data_car[ind_car][17] == 'v'  or data_car[ind_car][17] == 'vv'):
 			tmp = sorted_drivers[i]
 			del sorted_drivers[i]
@@ -515,14 +517,16 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for i in range(length_2):
 		ind_car = find_car_ind(drivers[sorted_drivers_sec[i]][0], data_car)
-		if data_trip[ind_trip][11] == 'город' and (data_car[ind_car][15] == 'v' or data_car[ind_car][15] == 'vv'):					#Тип поездки
-			tmp = sorted_drivers_sec[i]
-			del sorted_drivers_sec[i]
-			sorted_drivers_sec.insert(0, tmp)
 		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):	
 			tmp = sorted_drivers_sec[i]
 			del sorted_drivers_sec[i]
 			sorted_drivers_sec.append(tmp)
+			continue
+		if data_trip[ind_trip][11] == 'город' and (data_car[ind_car][15] == 'v' or data_car[ind_car][15] == 'vv'):					#Тип поездки
+			tmp = sorted_drivers_sec[i]
+			del sorted_drivers_sec[i]
+			sorted_drivers_sec.insert(0, tmp)
+		
 		if data_trip[ind_trip][11] != 'город' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):
 			tmp = sorted_drivers_sec[i]
 			del sorted_drivers_sec[i]
