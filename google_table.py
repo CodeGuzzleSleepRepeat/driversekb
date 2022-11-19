@@ -449,14 +449,11 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			continue
 		
 
-		if len(data_car[ind_car][1]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
-			print('Hello7')
+		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
 			continue
 		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11].find('Новоуральск') > -1:
-			print('Hello8')
 			continue
 		if len(data_car[ind_car][20]) == 0 and data_trip[ind_trip][11] == 'шатл':
-			print('Hello9')
 			continue
 
 		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][15]) == 0:
@@ -582,7 +579,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		try:
 			drivers[sorted_drivers[0]][3] = i
 		except:
-			jj = 0
+			pass
 
  
  
