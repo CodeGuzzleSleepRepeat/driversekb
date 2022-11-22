@@ -559,6 +559,17 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 	prior_table.clear()
 	length = len(data)
 	for i in range(length):
+		for j in range(length - 1):		
+			if data[j][3] == '' or data[j][1] != '':
+				continue 
+			ind_trip = find_trip_ind(data[j + 1][0], data_trip)	
+			ind_trip2 = find_trip_ind(data[j][0], data_trip)
+			if data_trip[ind_trip][1] > data_trip[ind_trip2][1]:
+				tmp = data[j]
+				data[j] = data[j + 1]
+				data[j + 1] = tmp
+				
+	for i in range(length):
 		num = str(i)
 		if i < 10:
 			num = '0' + str(i)
