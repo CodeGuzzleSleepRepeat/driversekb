@@ -81,9 +81,9 @@ def reply_ip_markup(chat_id, text):
 
 def reply_markup_cars(chat_id, text, ip):
 	arr = []
-	#for car in company[ip][1:]:
-	#	if car != '':
-	#		arr.append([car])
+	for car in company[ip][1:]:
+		if car != '':
+			arr.append([car])
 	arr.append([company[ip][1]])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
@@ -301,7 +301,7 @@ def check_driver_time():
 					if trip == -1:
 						flag_task[driver] = 0
 						continue
-					#reject_driver(int(driver.split('_')[0]), trip, 'Вы не согласились на заказ за час - он предложен другому исполнителю')
+					reject_driver(int(driver.split('_')[0]), trip, 'Вы не согласились на заказ за час - он предложен другому исполнителю')
 
 				except:
 					print('Something wrong with time rejection')
@@ -742,6 +742,7 @@ def checking():
 	#check_time5()
 	#check_time6()
 	check_driver_time()
+	
 def new_drivers():
 	global data_trip
 	global data_car
