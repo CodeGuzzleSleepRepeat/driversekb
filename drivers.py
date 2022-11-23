@@ -84,7 +84,6 @@ def reply_markup_cars(chat_id, text, ip):
 	for car in company[ip][1:]:
 		if car != '':
 			arr.append([car])
-	arr.append([company[ip][1]])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
@@ -294,7 +293,7 @@ def check_driver_time():
 	for driver in active_drivers:
 		try:
 			now = datetime.datetime.now()
-			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 36:
+			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
@@ -539,7 +538,7 @@ def check_message(message):
 
 		if message['callback_query']['data'] == 'Да':
 			flag_driver[chat_id] = 0
-			#flag_ready[chat_id] = 1
+			flag_ready[chat_id] = 1
 			for car in company:
 				if company[car][0] == chat_id:
 					cur_company = car
@@ -727,7 +726,7 @@ def prepare_cars():
 			for t in company[tmp]:
 				if t == line[0]:
 					continue
-			company[tmp].append(line[0])
+				company[tmp].append(line[0])
 		except:
 			company[tmp] = [-1, line[0]]
 
