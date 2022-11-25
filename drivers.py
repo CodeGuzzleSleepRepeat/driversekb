@@ -82,6 +82,11 @@ def reply_ip_markup(chat_id, text):
 def reply_markup_cars(chat_id, text, ip):
 	arr = []
 	for car in company[ip][1:]:
+		try:
+			if car == arr[len(arr) - 1]:
+				break
+		except:
+			pass
 		if car != '':
 			arr.append([car])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
