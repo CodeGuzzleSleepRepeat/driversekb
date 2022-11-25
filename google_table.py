@@ -558,6 +558,7 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 def find_priorities(data, prior_table, drivers, data_car, data_trip):
 	prior_table.clear()
 	length = len(data)
+	'''
 	for i in range(length):
 		for j in range(length - 1):		
 			if data[j][3] == '' or data[j][1] != '':
@@ -568,7 +569,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 				tmp = data[j]
 				data[j] = data[j + 1]
 				data[j + 1] = tmp
-				
+	'''			
 	for i in range(length):
 		num = str(i)
 		if i < 10:
