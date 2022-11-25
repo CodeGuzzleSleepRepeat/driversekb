@@ -425,6 +425,13 @@ def no_drivers_alert(trip_id):
 		return
 
 def reject_driver(chat_id, prior, text):
+	res = ''
+	for car in company:
+		if company[car][0] == chat_id:
+			res = company[car][1]
+			break
+
+	gt.orders[res] = 0
 	if text != '':
 		send_message(chat_id, text)
 	try:
@@ -452,18 +459,14 @@ def request_driver(prior, chat_id):
 	mes = form_mes(prior_table[prior], prior)
 
 
-
 	try:
 		driver = prior_table[prior][3]
+		flag_task[prior_table[prior][3]] = 1
 	except:
-		print(prior)
 		no_drivers_alert(prior)
 		return
 
-	try:
-		flag_task[prior_table[prior][3]] = 1
-	except:
-		kk = 0
+	
 
 	if gt.check_driver(active_drivers[driver][0], prior_table[prior], prior, data_car, data_trip):
 		inline_keyboard(driver, mes, str(prior))
@@ -496,13 +499,15 @@ def check_message(message):
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
 			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 1 
 
+
 			try:
-				if prior_table[ddd.split('_')[0][8:]][3].split('_')[0] != str(chat_id):
+				if flag_another_driver[ddd] == 1:
 					send_message(chat_id, 'Этот заказ уже передан другому исполнителю')
 					return
 			except:
 				kk = 0
 
+			flag_another_driver[ddd] = 1
 			
 
 			send_message(chat_id, 'Вы назначены на заказ')			
@@ -521,16 +526,28 @@ def check_message(message):
 			taken_orders += 1
 
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
+			flag_task[str(chat_id)] = 0
 			if taken_orders == num_of_orders:
 				pathetic_news()
 			return 
+
+
 		if str(message['callback_query']['data']).find('Не согласен') > -1:			
 			taken_orders -= 1
 			ddd = longing[ddd[11:].split('_')[0]] + '_' + ddd.split('_')[1]
 			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 
+			flag_another_driver[ddd] = 0
 			if active_drivers[str(chat_id) + '_' + ddd.split('_')[1]][3] >= 0:
-				gt.clear_data(int(ddd[len(ddd.split('_')[0]) - 2:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
+				llll = len(ddd)
+				num_of_nums = 0
+				for i in range(llll):
+					try:
+						int(ddd[llll - i - 3])
+						num_of_nums += 1
+					except:
+						break
+				gt.clear_data(int(ddd[len(ddd.split('_')[0]) - num_of_nums:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			reject_driver(chat_id, ddd.split('_')[0], 'Вы отказались от заказа')
 			active_drivers[str(chat_id) + '_' + ddd.split('_')[1]][3] = -1
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
@@ -572,6 +589,8 @@ def check_message(message):
 	except:
 		jj = 0
 
+
+
 	'''
 	if message['message']['text'] == 'Добавить машину':
 		send_message(chat_id, 'Введите номер машины')
@@ -600,8 +619,6 @@ def check_message(message):
 			except:
 				send_message(chat_id, 'Такого ИП нет в базе, проверьте правильность введенных данных')
 				return
-			#cur_driver[chat_id].append(message['message']['text'])
-			print(flag_driver[chat_id], message['message']['text'])
 			reply_markup_cars(chat_id, 'Выберите машину', message['message']['text'])
 			flag_driver[chat_id] = 1
 		elif flag_driver[chat_id] == 1:
@@ -633,17 +650,19 @@ def check_message(message):
 
 
 	if message['message']['text'] == 'Начать распределение' and set([chat_id]).issubset(admin_id):
-		print(active_drivers)
 		taken_orders = 0
 		num_of_orders = 0
 		flag_admin[chat_id] = 0
+		print('ACTIVE', active_drivers)
 		for i in range(50):
 			num = str(i)
 			if i < 10:
 				num = '0' + num
 			flag_took[str(chat_id) + '_' + num] = 0
 		for driver in active_drivers:
+			print('MAIN', driver)
 			gt.orders[active_drivers[driver][0]] = 0
+		print('OREDR', gt.orders)
 		trips, i = gt.parse_table()
 		if i == -1:
 			send_message(chat_id, 'Невозможно получить все данные из таблицы, попробуйте позже')
@@ -656,6 +675,7 @@ def check_message(message):
 				request_driver(prior, chat_id)
 		send_message(chat_id, 'Маршруты распределены, ожидаем ответов от исполнителей')
 		return
+
 
 
 	if message['message']['text'] == 'Добавить админа' and set([chat_id]).issubset(admin_id):
@@ -740,8 +760,10 @@ def checking():
 	#check_time4()
 	#check_time5()
 	#check_time6()
+
 	check_driver_time()
-	
+
+
 def new_drivers():
 	global data_trip
 	global data_car
@@ -791,7 +813,7 @@ def main():
 
 
 	while True:
-		try:
+		if True:
 			try:
 				thread_check = Thread(target = checking, args = [])
 				thread_check.start()
@@ -810,10 +832,9 @@ def main():
 			for message in messages:
 				if update_id < message['update_id']:
 					update_id = message['update_id']
-
 					try:					
 						if str(message).find('query') == -1:
-							flag_start[message['message']['chat']['id']]				
+							flag_start[message['message']['chat']['id']]			
 					except:
 						try:
 							flag_start[message['message']['chat']['id']] = 1
@@ -836,7 +857,7 @@ def main():
 								send_message(message['message']['chat']['id'], 'Добро пожаловать')
 								drivers.append(message['message']['chat']['id'])
 						except:
-								k = 0
+							k = 0
 
 					try:
 						thread = Thread(target = check_message, args = [message])
@@ -845,12 +866,11 @@ def main():
 						continue
 
 			time.sleep(0.1)
-		except:
+		else:
 			continue
 
 
 main()
-
 
 
 
