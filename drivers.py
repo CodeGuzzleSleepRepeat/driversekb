@@ -38,6 +38,7 @@ flag_date5 = {}
 flag_date6 = {}
 flag_task = {}
 flag_driver = {}
+flag_another_driver = {}
 flag_ready = {}
 flag_ready2 = {}
 flag_took = {}
