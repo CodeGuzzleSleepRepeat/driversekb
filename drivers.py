@@ -5,7 +5,7 @@ from threading import Thread
 import google_table as gt
 import json
 
-
+import sys
 
 TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'		
 #TOKEN = '5436969391:AAGZPyZn659hqnwYpL_3nVSCipTSDp9oTaA'	#test
@@ -680,6 +680,7 @@ def check_message(message):
 			if not gt.taken[prior]:
 				request_driver(prior, chat_id)
 		send_message(chat_id, 'Маршруты распределены, ожидаем ответов от исполнителей')
+		print('SIZE', sys.getsizeof(prior_table))
 		return
 
 
