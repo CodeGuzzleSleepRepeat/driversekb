@@ -819,7 +819,7 @@ def main():
 
 
 	while True:
-		if True:
+		try:
 			try:
 				thread_check = Thread(target = checking, args = [])
 				thread_check.start()
@@ -872,7 +872,7 @@ def main():
 						continue
 
 			time.sleep(0.1)
-		else:
+		except:
 			continue
 
 
