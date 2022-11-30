@@ -755,7 +755,7 @@ def prepare_cars():
 					continue
 				company[tmp].append(line[0])
 		except:
-			company[tmp] = [-1, line[0]]
+			company[tmp] = [line[0]]
 
 
 def checking():
