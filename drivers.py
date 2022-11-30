@@ -5,6 +5,9 @@ from threading import Thread
 import google_table as gt
 import json
 
+import psutil
+import os
+
 import sys
 
 TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'		
@@ -873,6 +876,13 @@ def main():
 						thread.start()
 					except:
 						continue
+					try:
+						print(message['message']['text'])
+					except:
+						print(message['callback_query']['data'])
+					process = psutil.Process(os.getpid())
+					mem_info = process.memory_info()
+					print('Mem', mem_info.rss)
 
 			time.sleep(0.1)
 		except:
