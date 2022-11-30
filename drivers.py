@@ -751,8 +751,10 @@ def prepare_cars():
 			tmp = line[1][:len(line[1]) - 1]
 		try:
 			for t in company[tmp]:
+				print(t, line[0])
 				if t == line[0]:
-					continue
+					break
+			else:
 				company[tmp].append(line[0])
 		except:
 			company[tmp] = [line[0]]
