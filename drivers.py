@@ -753,14 +753,15 @@ def prepare_cars():
 		if line[1][len(line[1]) - 1] == ' ':
 			tmp = line[1][:len(line[1]) - 1]
 		try:
-			for t in company[tmp]:
+			l = len(company[tmp])
+			for i in range(1, l):
 				print(t, line[0])
 				if t == line[0]:
 					break
 			else:
 				company[tmp].append(line[0])
 		except:
-			company[tmp] = [line[0]]
+			company[tmp] = [-1, line[0]]
 
 
 def checking():
