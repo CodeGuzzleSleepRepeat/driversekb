@@ -393,6 +393,8 @@ def check_driver(driver, line, prior, data_car, data_trip):
 def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 	sorted_drivers = []
 	sorted_drivers_sec = []
+	sorted_drivers_prev = []
+	sorted_drivers_sec_prev = []
 
 
 	if data_trip[ind_trip][11] == 'Север (С)' and north != '':				#Север
@@ -470,32 +472,28 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 
 		if len(data_car[ind_car][22]) != 0:
-			sorted_drivers.append(driver)										#Приоритет
+			sorted_drivers_prev.append(driver)										#Приоритет
 		else:
-			sorted_drivers_sec.append(driver)
+			sorted_drivers_sec_prev.append(driver)
 
 
-	length_1 = len(sorted_drivers)
-	length_2 = len(sorted_drivers_sec)
+	length_1 = len(sorted_drivers_prev)
+	length_2 = len(sorted_drivers_sec_prev)
 
 	for i in range(length_1):
-		ind_car = find_car_ind(drivers[sorted_drivers[i]][0], data_car)
+		ind_car = find_car_ind(drivers[sorted_drivers_prev[i]][0], data_car)
+		print(data_car[ind_car])
 		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):			
-			tmp = sorted_drivers[i]
-			del sorted_drivers[i]
+			tmp = sorted_drivers_prev[i]
 			sorted_drivers.append(tmp)
 			continue
 		if data_trip[ind_trip][11] == 'город' and (data_car[ind_car][15] == 'v' or data_car[ind_car][15] == 'vv'):					#Тип поездки
-			tmp = sorted_drivers[i]
-			del sorted_drivers[i]
+			tmp = sorted_drivers_prev[i]
 			sorted_drivers.insert(0, tmp)
-			
-		
-		if data_trip[ind_trip][11] != 'город' and (data_car[ind_car][17] == 'v'  or data_car[ind_car][17] == 'vv'):
-			tmp = sorted_drivers[i]
-			del sorted_drivers[i]
+
+		if data_trip[ind_trip][11] == 'межгород' and (data_car[ind_car][17] == 'v'  or data_car[ind_car][17] == 'vv'):
+			tmp = sorted_drivers_prev[i]
 			sorted_drivers.insert(0, tmp)
-			
 
 	for j in range(length_1):
 		for i in range(length_1 - 1):											#Километраж за неделю
@@ -516,20 +514,17 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 
 	for i in range(length_2):
-		ind_car = find_car_ind(drivers[sorted_drivers_sec[i]][0], data_car)
+		ind_car = find_car_ind(drivers[sorted_drivers_sec_prev[i]][0], data_car)
 		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):	
-			tmp = sorted_drivers_sec[i]
-			del sorted_drivers_sec[i]
+			tmp = sorted_drivers_sec_prev[i]
 			sorted_drivers_sec.append(tmp)
 			continue
 		if data_trip[ind_trip][11] == 'город' and (data_car[ind_car][15] == 'v' or data_car[ind_car][15] == 'vv'):					#Тип поездки
-			tmp = sorted_drivers_sec[i]
-			del sorted_drivers_sec[i]
+			tmp = sorted_drivers_sec_prev[i]
 			sorted_drivers_sec.insert(0, tmp)
-		
-		if data_trip[ind_trip][11] != 'город' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):
-			tmp = sorted_drivers_sec[i]
-			del sorted_drivers_sec[i]
+
+		if data_trip[ind_trip][11] == 'межгород' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):
+			tmp = sorted_drivers_sec_prev[i]
 			sorted_drivers_sec.insert(0, tmp)
 
 	for j in range(length_2):
