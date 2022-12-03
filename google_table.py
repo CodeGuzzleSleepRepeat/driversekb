@@ -188,7 +188,7 @@ def plus_km(ind_car, ind_trip, data_car, data_trip, driver_id):
 	while counter < 10:
 		try:
 			sh = gc.open("DriversDistribTable").get_worksheet(4)
-			sh.update_cell(ind_car + 3, 24, str(dist) + prev - km[driver_id][0])
+			sh.update_cell(ind_car + 3, 24, str(dist + prev - km[driver_id][0]))
 			break
 		except:
 			time.sleep(10)
