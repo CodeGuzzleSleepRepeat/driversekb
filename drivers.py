@@ -504,19 +504,21 @@ def check_message(message):
 	if str(message).find('callback_query') > -1:
 		chat_id = message['callback_query']['message']['chat']['id']
 		ddd = message['callback_query']['data']
+		if str(message).find('callback_query') > -1:
+		chat_id = message['callback_query']['message']['chat']['id']
+		ddd = message['callback_query']['data']
 		if str(message['callback_query']['data']).find('Согласен') > -1:
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
-			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 1 
-
 
 			try:
-				if flag_another_driver[ddd] == 1:
+				if flag_another_driver[ddd] == 1 and flag_took[str(chat_id) + '_' + ddd.split('_')[1]] == 0:
 					send_message(chat_id, 'Этот заказ уже передан другому исполнителю')
 					return
 			except:
-				kk = 0
+				pass
 
 			flag_another_driver[ddd] = 1
+			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 1 
 			
 
 			send_message(chat_id, 'Вы назначены на заказ')			
@@ -535,7 +537,6 @@ def check_message(message):
 			taken_orders += 1
 
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
-			flag_task[str(chat_id)] = 0
 			if taken_orders == num_of_orders:
 				pathetic_news()
 			return 
