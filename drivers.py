@@ -504,9 +504,6 @@ def check_message(message):
 	if str(message).find('callback_query') > -1:
 		chat_id = message['callback_query']['message']['chat']['id']
 		ddd = message['callback_query']['data']
-		if str(message).find('callback_query') > -1:
-		chat_id = message['callback_query']['message']['chat']['id']
-		ddd = message['callback_query']['data']
 		if str(message['callback_query']['data']).find('Согласен') > -1:
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
 
