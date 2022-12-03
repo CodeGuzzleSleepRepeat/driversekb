@@ -489,7 +489,18 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for i in range(length_1):
 		ind_car = find_car_ind(drivers[sorted_drivers_prev[i]][0], data_car)
-		print(data_car[ind_car])
+		if data_car[ind_car][19] == 'v' and data_trip[ind_trip][11].find('Новоуральск') > -1:
+			tmp = sorted_drivers_prev[i]
+			sorted_drivers.insert(0, tmp)
+			continue
+		if data_car[ind_car][18] == 'v' and data_trip[ind_trip][11].find('ЕКБ МЕГА') > -1:
+			tmp = sorted_drivers_prev[i]
+			sorted_drivers.insert(0, tmp)
+			continue
+		if data_car[ind_car][20] == 'v' and data_trip[ind_trip][11].find('шатл') > -1:
+			tmp = sorted_drivers_prev[i]
+			sorted_drivers.insert(0, tmp)
+			continue
 		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):			
 			tmp = sorted_drivers_prev[i]
 			sorted_drivers.append(tmp)
@@ -522,6 +533,18 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for i in range(length_2):
 		ind_car = find_car_ind(drivers[sorted_drivers_sec_prev[i]][0], data_car)
+		if data_car[ind_car][19] == 'v' and data_trip[ind_trip][11].find('Новоуральск') > -1:
+			tmp = sorted_drivers_sec_prev[i]
+			sorted_drivers_sec.insert(0, tmp)
+			continue
+		if data_car[ind_car][18] == 'v' and data_trip[ind_trip][11].find('ЕКБ МЕГА') > -1:
+			tmp = sorted_drivers_sec_prev[i]
+			sorted_drivers_sec.insert(0, tmp)
+			continue
+		if data_car[ind_car][20] == 'v' and data_trip[ind_trip][11].find('шатл') > -1:
+			tmp = sorted_drivers_sec_prev[i]
+			sorted_drivers_sec.insert(0, tmp)
+			continue
 		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):	
 			tmp = sorted_drivers_sec_prev[i]
 			sorted_drivers_sec.append(tmp)
