@@ -79,7 +79,7 @@ def reply_ip_markup(chat_id, text):
 	for car in company:
 		if car != '':
 			arr.append([car])
-	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
+	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": True}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
 	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
 
