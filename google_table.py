@@ -180,10 +180,15 @@ def plus_km(ind_car, ind_trip, data_car, data_trip, driver_id):
 		prev = 0
 
 	counter = 0
+	try:
+		dist = int(data_trip[ind_trip][1])
+	except:
+		return
+
 	while counter < 10:
 		try:
 			sh = gc.open("DriversDistribTable").get_worksheet(4)
-			sh.update_cell(ind_car + 3, 24, str(int(data_trip[ind_trip][1]) + prev - km[driver_id][0]))
+			sh.update_cell(ind_car + 3, 24, str(dist) + prev - km[driver_id][0])
 			break
 		except:
 			time.sleep(10)
@@ -276,8 +281,10 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 
 	if data_trip[ind_trip][11] == 'Север (C)':
 		north = chat_id
-
-	plus_km(ind_car, ind_trip, data_car, data_trip, driver_data[0])
+	try:
+		plus_km(ind_car, ind_trip, data_car, data_trip, driver_data[0])
+	except:
+		pass
 
 
 	
