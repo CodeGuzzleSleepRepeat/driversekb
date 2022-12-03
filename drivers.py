@@ -310,7 +310,7 @@ def check_driver_time():
 						flag_task[driver] = 0
 						continue
 					reject_driver(int(driver.split('_')[0]), trip, 'Вы не согласились на заказ за час - он предложен другому исполнителю')
-
+					flag_task[driver] = 0
 				except:
 					print('Something wrong with time rejection')
 		except:
