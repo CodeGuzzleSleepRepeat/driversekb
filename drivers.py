@@ -755,14 +755,12 @@ def prepare_cars():
 		try:
 			l = len(company[tmp])
 			for i in range(1, l):
-				print(t, line[0])
-				if t == line[0]:
+				if company[tmp][i] == line[0]:
 					break
 			else:
 				company[tmp].append(line[0])
 		except:
 			company[tmp] = [-1, line[0]]
-
 
 def checking():
 	global update_time
