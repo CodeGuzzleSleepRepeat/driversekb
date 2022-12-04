@@ -1,7 +1,7 @@
 import gspread
 import datetime
 import time
-
+import sys
 
 
 gc = gspread.service_account(filename='driversdistrib-ff44f21c020e.json')
@@ -66,6 +66,7 @@ def parse_table():
 		except:
 			continue
 		i += 1
+	print('SIZE2', sys.getsizeof(res_data))
 	return res_data, i
 
 def parse_changes():
@@ -117,6 +118,7 @@ def parse_secondary():
 		tmp = line[1]
 		line[1] = line[2]
 		line[2] = tmp
+
 
 	return data_trip, data_car
 
@@ -228,7 +230,7 @@ def get_return_time(data_trip, ind_trip):
 		num = 2
 
 	return_day = datetime.date.today() + datetime.timedelta(days = num)
-	print(num - 3, return_day)
+
 
 	return_time = data_trip[ind_trip][10][3:]
 	if return_time == '':
@@ -276,11 +278,11 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 		except:
 			time.sleep(10)
 			counter += 1
-
 	
 
-	if data_trip[ind_trip][11] == 'Север (C)':
-		north = chat_id
+	#if data_trip[ind_trip][11] == 'Север (C)':
+	#	north = chat_id
+
 	try:
 		plus_km(ind_car, ind_trip, data_car, data_trip, driver_data[0])
 	except:
@@ -357,7 +359,6 @@ def check_driver(driver, line, prior, data_car, data_trip):
 	ind_car = find_car_ind(driver, data_car)
 	print('Check', prior, orders)
 	try:
-		print(driver)
 		if orders[driver] == 1:
 			return False
 	except:
@@ -371,11 +372,13 @@ def check_driver(driver, line, prior, data_car, data_trip):
 			num_of_nums += 1
 		except:
 			break
+
 	try:
 		if timing[ind_car][0] < 0:
-			timing[ind_car][0] = (today + datetime.timedelta(-1 + num_of_days[prior[len(prior) - num_of_nums:]])).date()
+			timing[ind_car][0] = (today + datetime.timedelta( num_of_days[prior[len(prior) - num_of_nums:]])).date()
 	except:
 		pass
+
 	try:
 		print(timing[ind_car][0], (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date())
 		if timing[ind_car][0] > (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():									# Время
@@ -464,10 +467,13 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 		
 
 		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
+			print('Hello7')
 			continue
 		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11].find('Новоуральск') > -1:
+			print('Hello8')
 			continue
 		if len(data_car[ind_car][20]) == 0 and data_trip[ind_trip][11] == 'шатл':
+			print('Hello9')
 			continue
 
 		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][15]) == 0:
@@ -594,7 +600,8 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 				tmp = data[j]
 				data[j] = data[j + 1]
 				data[j + 1] = tmp
-	'''			
+	'''
+
 	for i in range(length):
 		num = str(i)
 		if i < 10:
@@ -613,7 +620,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 				taken[data[i][0] + num] = True
 				continue
 		except:
-			pass
+			kk = 0
 
 		taken[data[i][0] + num] = False
 
@@ -627,6 +634,7 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		except:
 			pass
 
+ 
  
  
  
