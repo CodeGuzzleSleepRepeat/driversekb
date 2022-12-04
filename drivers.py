@@ -1,3 +1,5 @@
+import psutil
+import os
 import requests
 import time
 import datetime
@@ -5,8 +7,6 @@ from threading import Thread
 import google_table as gt
 import json
 
-import psutil
-import os
 
 import sys
 
@@ -29,6 +29,7 @@ cur_driver = {}
 cur_time = {}
 company = {}
 
+
 admins = set()
 admin_id = set()
 
@@ -40,8 +41,8 @@ flag_date4 = {}
 flag_date5 = {}
 flag_date6 = {}
 flag_task = {}
-flag_driver = {}
 flag_another_driver = {}
+flag_driver = {}
 flag_ready = {}
 flag_ready2 = {}
 flag_took = {}
@@ -62,17 +63,19 @@ proxies = {
 	'http' : 'http://proxy.server:3128'
 }
 
+
+
 def get_updates(offset=0):
-	result = requests.get(f'{URL}{TOKEN}/getUpdates?offset={offset}', proxies=proxies).json()
+	result = requests.get(f'{URL}{TOKEN}/getUpdates?offset={offset}').json()
 	return result['result']
 
 def send_message(chat_id, text):
-	return requests.get(f'{URL}{TOKEN}/sendMessage?chat_id={chat_id}&text={text}', proxies=proxies)
+	return requests.get(f'{URL}{TOKEN}/sendMessage?chat_id={chat_id}&text={text}')
 
 def reply_markup(chat_id, text):
 	reply_markup = { "keyboard": [['Изменить данные']], "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def reply_ip_markup(chat_id, text):
 	arr = []
@@ -81,7 +84,7 @@ def reply_ip_markup(chat_id, text):
 			arr.append([car])
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": True}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def reply_markup_cars(chat_id, text, ip):
 	arr = []
@@ -93,19 +96,20 @@ def reply_markup_cars(chat_id, text, ip):
 			pass
 		if car != '':
 			arr.append([car])
+
 	reply_markup = { "keyboard": arr, "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def reply_markup2(chat_id, text):
 	reply_markup = { "keyboard": [['Не согласен']], "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def reply_admin_markup(chat_id, text):
 	reply_markup = { "keyboard": [['Начать распределение'], ['Добавить админа'], ['Удалить админа'], ['Показать админов']], "resize_keyboard": True, "one_time_keyboard": False}
 	data = {'chat_id': chat_id, 'text' : text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data, proxies=proxies)
+	return requests.post(f'{URL}{TOKEN}/sendMessage', data=data)
 
 def inline_keyboard(chat_id, text, id_trip):
 	id_num = chat_id.split('_')[1]
@@ -121,7 +125,7 @@ def inline_keyboard(chat_id, text, id_trip):
 def inline_keyboard2(chat_id, text):
 	reply_markup = {'inline_keyboard': [[{'text' : 'Да', 'callback_data' : 'Да'}, {'text' : 'Нет', 'callback_data' : 'Нет'}]]}
 	data = {'chat_id': chat_id, 'text': text, 'reply_markup': json.dumps(reply_markup)}
-	return requests.get(f'{URL}{TOKEN}/sendMessage', data = data, proxies=proxies)
+	return requests.get(f'{URL}{TOKEN}/sendMessage', data = data)
 
 
 
@@ -131,6 +135,7 @@ def check_time():
 		flag_date[datetime.date.today().strftime("%d.%m.%y")]
 	except:
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 0
+
 
 	if datetime.datetime.now().hour == 16 and datetime.datetime.now().minute == 30 and flag_date[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date[datetime.date.today().strftime("%d.%m.%y")] = 1
@@ -163,7 +168,7 @@ def check_time2():
 	except:
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 0
 
-	if datetime.datetime.now().hour == 10 and datetime.datetime.now().minute == 00 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
+	if datetime.datetime.now().hour == 10 and datetime.datetime.now().minute == 0 and flag_date2[datetime.date.today().strftime("%d.%m.%y")] == 0:		
 		flag_date2[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
@@ -171,7 +176,7 @@ def check_time2():
 			ii = 0
 		for driver in drivers:
 			flag_ready[driver] = 1
-
+			print(driver)
 			for car in company:
 				if company[car][0] == driver:
 					flag_driver[driver] = 1
@@ -276,7 +281,7 @@ def check_time6():
 	except:
 		flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
 	if datetime.datetime.now().hour == 16 and datetime.datetime.now().minute == 0 and flag_date6[datetime.date.today().strftime("%d.%m.%y")] == 0:		
-		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 1
+		flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 1
 		try:
 			gt.del_driver_from_table(data_car)
 		except:
@@ -302,7 +307,7 @@ def check_driver_time():
 	for driver in active_drivers:
 		try:
 			now = datetime.datetime.now()
-			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
+			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 60:
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
@@ -506,7 +511,7 @@ def check_message(message):
 		ddd = message['callback_query']['data']
 		if str(message['callback_query']['data']).find('Согласен') > -1:
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
-
+			print(ddd)
 			try:
 				if flag_another_driver[ddd] == 1 and flag_took[str(chat_id) + '_' + ddd.split('_')[1]] == 0:
 					send_message(chat_id, 'Этот заказ уже передан другому исполнителю')
@@ -532,7 +537,7 @@ def check_message(message):
 				num_of_nums -= 1
 			gt.input_data(int(ddd[llll - num_of_nums:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			taken_orders += 1
-
+			print(str(chat_id) + '_' + ddd.split('_')[1])
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			if taken_orders == num_of_orders:
 				pathetic_news()
@@ -681,7 +686,6 @@ def check_message(message):
 			if not gt.taken[prior]:
 				request_driver(prior, chat_id)
 		send_message(chat_id, 'Маршруты распределены, ожидаем ответов от исполнителей')
-		print('SIZE', sys.getsizeof(prior_table))
 		return
 
 
@@ -759,6 +763,8 @@ def prepare_cars():
 				company[tmp].append(line[0])
 		except:
 			company[tmp] = [-1, line[0]]
+	
+
 
 def checking():
 	global update_time
@@ -776,6 +782,7 @@ def checking():
 def new_drivers():
 	global data_trip
 	global data_car
+
 	data_trip, data_car = gt.parse_secondary()
 	prepare_cars()
 
@@ -786,6 +793,9 @@ def main():
 	global flag_sec
 	global update_time
 	global update_time2
+
+
+	
 
 	admins.add('fcknmaggot')
 	admins.add('as_mironov')
@@ -799,8 +809,8 @@ def main():
 	flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
 	flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 0
 	flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 0
-
 	flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
+	
 
 	data_trip, data_car = gt.parse_secondary()
 	len_car = len(data_car)
@@ -823,6 +833,7 @@ def main():
 
 	while True:
 		try:
+			
 			try:
 				thread_check = Thread(target = checking, args = [])
 				thread_check.start()
@@ -835,9 +846,11 @@ def main():
 					thread_new_dri.start()
 			except:
 				k = 0
-
-
+			
+			
+			
 			messages = get_updates(update_id + 1)
+
 			for message in messages:
 				if update_id < message['update_id']:
 					update_id = message['update_id']
@@ -868,18 +881,15 @@ def main():
 						except:
 							k = 0
 
-					try:
+					if True:
 						thread = Thread(target = check_message, args = [message])
 						thread.start()
-					except:
+					else:
 						continue
-					try:
-						print(message['message']['text'])
-					except:
-						print(message['callback_query']['data'])
-					process = psutil.Process(os.getpid())
-					mem_info = process.memory_info()
-					print('Mem', mem_info.rss)
+
+					#process = psutil.Process(os.getpid())
+					#mem_info = process.memory_info()
+					#print('Mem', mem_info.rss)
 
 			time.sleep(0.1)
 		except:
@@ -887,6 +897,8 @@ def main():
 
 
 main()
+
+
 
 
 
