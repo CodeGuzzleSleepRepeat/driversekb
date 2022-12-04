@@ -176,7 +176,7 @@ def check_time2():
 			ii = 0
 		for driver in drivers:
 			flag_ready[driver] = 1
-			print(driver)
+			
 			for car in company:
 				if company[car][0] == driver:
 					flag_driver[driver] = 1
@@ -307,7 +307,7 @@ def check_driver_time():
 	for driver in active_drivers:
 		try:
 			now = datetime.datetime.now()
-			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 60:
+			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
@@ -511,7 +511,7 @@ def check_message(message):
 		ddd = message['callback_query']['data']
 		if str(message['callback_query']['data']).find('Согласен') > -1:
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
-			print(ddd)
+			
 			try:
 				if flag_another_driver[ddd] == 1 and flag_took[str(chat_id) + '_' + ddd.split('_')[1]] == 0:
 					send_message(chat_id, 'Этот заказ уже передан другому исполнителю')
