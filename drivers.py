@@ -358,33 +358,27 @@ def check_updates():
 def check_car_new_vol(line, num):
 	ind_car = gt.find_car_ind(active_drivers[prior_table[line[0]][3]][0], data_car)
 	try:
-		'''
-		if data_car[ind_car][4] == 'v' and int(data[1]) > 10:		#Грузоподъемность
+		
+		if data_car[ind_car][5] != 'v' and line[1] == '10':		#Грузоподъемность
 			return False
-		if data_car[ind_car][5] == 'v' and int(data[1]) > 20:
+		if data_car[ind_car][6] != 'v' and line[1] == '20-':
 			return False
-		if data_car[ind_car][6] == 'v' and int(data[1]) > 25:
+		if data_car[ind_car][7] != 'v' and line[1] == '20+':
 			return False
-		if data_car[ind_car][7] == 'v' and int(data[1]) > 30:
+		if data_car[ind_car][8] != 'v' and line[1] == '30-':
 			return False
-		if data_car[ind_car][8] == 'v' and int(data[1]) > 35:
+		if data_car[ind_car][9] != 'v' and line[1] == '30+':
 			return False
-		if data_car[ind_car][9] == 'v' and int(data[1]) > 40:
+		if data_car[ind_car][10] != 'v' and line[1] == '40-':
 			return False
-		if data_car[ind_car][10] == 'v' and int(data[1]) > 45:
+		if data_car[ind_car][11] != 'v' and line[1] == '40+':
 			return False
-		if data_car[ind_car][11] == 'v' and int(data[1]) > 50:
+		if data_car[ind_car][12] != 'v' and line[1] == '50-':
 			return False
-		'''
-		try:
-			if line[1][len(line[1]) - 1] == '+' or line[1][len(line[1]) - 1] == '-':
-				line[1] = line[1][:len(line[1]) - 1]
-			if int(data_car[ind_car][2]) < int(line[1]):
-				return False
-		except:
-			return True
+		if data_car[ind_car][13] != 'v' and line[1] == '50+':
+			return False
 	except:
-		return True
+		print('Bad checking vol')
 	return True
 
 def send_changes(data):
