@@ -308,6 +308,7 @@ def check_driver_time():
 		try:
 			now = datetime.datetime.now()
 			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
+				print('Task bad', driver)
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
@@ -518,11 +519,14 @@ def check_message(message):
 					return
 			except:
 				pass
-
+			
+			print('Task', str(chat_id) + '_' + ddd.split('_')[1])
+			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			flag_another_driver[ddd] = 1
 			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 1 
 			
-
+			
+			
 			send_message(chat_id, 'Вы назначены на заказ')			
 			send_message(chat_id, 'В случае, если потребуется отказаться от заказа - нажмите Не согласен')
 			llll = len(ddd.split('_')[0])
@@ -537,8 +541,6 @@ def check_message(message):
 				num_of_nums -= 1
 			gt.input_data(int(ddd[llll - num_of_nums:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			taken_orders += 1
-			print(str(chat_id) + '_' + ddd.split('_')[1])
-			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			if taken_orders == num_of_orders:
 				pathetic_news()
 			return 
