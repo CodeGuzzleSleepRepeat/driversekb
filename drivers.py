@@ -308,7 +308,7 @@ def check_driver_time():
 		try:
 			now = datetime.datetime.now()
 			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
-				print('Task bad', driver)
+				print('Task driver', driver)
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
