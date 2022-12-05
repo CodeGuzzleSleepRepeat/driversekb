@@ -486,7 +486,8 @@ def request_driver(prior, chat_id):
 	if gt.check_driver(active_drivers[driver][0], prior_table[prior], prior, data_car, data_trip):
 		inline_keyboard(driver, mes, str(prior))
 		num_of_orders += 1 
-		cur_time[driver] = datetime.datetime.now()
+		cur_time[driver] = datetime.datetime.now()		
+		flag_task[driver] = 1
 	else:
 		reject_driver(chat_id, prior, '')
 
