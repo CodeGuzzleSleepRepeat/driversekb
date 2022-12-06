@@ -480,7 +480,6 @@ def request_driver(prior, chat_id):
 
 	try:
 		driver = prior_table[prior][3]
-		flag_task[prior_table[prior][3]] = 1
 	except:
 		no_drivers_alert(prior)
 		return
@@ -692,6 +691,7 @@ def check_message(message):
 		gt.find_priorities(trips, prior_table, active_drivers, data_car, data_trip)
 		for driver in active_drivers:
 			flag_task[driver] = 0
+			cur_time[driver] = datetime.datetime.now()
 		for prior in prior_table:
 			if not gt.taken[prior]:
 				request_driver(prior, chat_id)
