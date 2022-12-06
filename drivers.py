@@ -312,11 +312,12 @@ def check_driver_time():
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
+					flag_task[driver] = 0
+					print('Driver1', driver)
 					if trip == -1:
-						flag_task[driver] = 0
 						continue
 					reject_driver(int(driver.split('_')[0]), trip, 'Вы не согласились на заказ за час - он предложен другому исполнителю')
-					flag_task[driver] = 0
+					
 				except:
 					print('Something wrong with time rejection')
 		except:
@@ -490,6 +491,8 @@ def request_driver(prior, chat_id):
 		num_of_orders += 1 
 		cur_time[driver] = datetime.datetime.now()		
 		flag_task[driver] = 1
+		
+		print('Driver2', driver)
 	else:
 		reject_driver(chat_id, prior, '')
 
@@ -564,7 +567,8 @@ def check_message(message):
 						num_of_nums += 1
 					except:
 						break
-				gt.clear_data(int(ddd[len(ddd.split('_')[0]) - num_of_nums:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
+				gt.clear_data(int(ddd[len(ddd.split('_')[0]) - num_of_nums:].split('_')[0]), prior_table, data_car, data_trip, trips)
+				#active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], 
 			reject_driver(chat_id, ddd.split('_')[0], 'Вы отказались от заказа')
 			active_drivers[str(chat_id) + '_' + ddd.split('_')[1]][3] = -1
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
