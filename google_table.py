@@ -357,7 +357,7 @@ def check_driver(driver, line, prior, data_car, data_trip):
 	global today
 
 	ind_car = find_car_ind(driver, data_car)
-	print('Check', prior, orders)
+
 	try:
 		if orders[driver] == 1:
 			return False
