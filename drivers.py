@@ -384,6 +384,7 @@ def check_car_new_vol(line, num):
 
 def send_changes(data):
 	length = len(data)
+	print(data)
 	for j in range(length):
 		num = str(j)
 		if j < 10:
@@ -391,37 +392,37 @@ def send_changes(data):
 		try:
 			for i in range(3):
 				if data[j][i + 1] != '':
-					prior_table[data[j][0]][i] = data[j][i + 1]
+					prior_table[data[j][0]][i] = str(data[j][i + 1])
+			ind_trip = gt.find_trip_ind(data[j][0], data_trip)
+			prior_table[data[j][0]] = prior_table[data[j][0]][:3] + gt.find_best(ind_trip, data[j], drivers, j, data_car, data_trip)
 		except:
 			print('Bad sending changes')
 
-
+		print(data[j][0])
 		try:
 			if not check_car_new_vol(data[j], num):
+				n = prior_table[data[j][0]][3].split('_')[1]
+				flag_another_driver[data[j][0] + '_' + str(n)] = 0
 				reject_driver(prior_table[data[j][0]][3].split('_')[0], data[j][0], 'Объем груза изменен и больше не подходит вашей машине')
 				try:
-					if active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]][3] >= 0:
-						llll = len(prior_table[data[j][0]][3])
-						num_of_nums = 0
-						for i in range(llll):
-							try:
-								int(prior_table[data[j][0]][3][llll - i - 3])
-								num_of_nums += 1
-							except:
-								break
-						gt.clear_data(int(prior_table[data[j][0]][3][len(prior_table[data[j][0]][3].split('_')[0]) - 2:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]], data_car, data_trip, trips)
+					#if active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]][3] >= 0:
+					llll = len(data[j][0])
+					num_of_nums = 0
+					for i in range(llll):
+						try:
+							int(data[j][0][llll - i - 1])
+							num_of_nums += 1
+						except:
+							break
+					gt.clear_data(int(data[j][0][len(data[j][0]) - num_of_nums:]), prior_table, data_car, data_trip, trips)
+					#active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]]
 				except:
-					print('Trouble with clearing data in table')
-				return
+					print('Clear table')
+			else:
+				mes = form_mes(prior_table[data[j][0]], data[j][0] + num)
+				send_message(prior_table[data[j][0]][3].split('_')[0], 'Детали поездки изменились:\n' + mes)
 		except:
-			k = 0
-
-		
-		try:
-			mes = form_mes(prior_table[data[j][0]], data[j][0] + num)
-			send_message(prior_table[data[j][0]][3].split('_')[0], 'Детали поездки изменились:\n' + mes)
-		except:
-			return
+			pass
 
 
 def find_trip(chat_id):
