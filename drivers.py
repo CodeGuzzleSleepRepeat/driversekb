@@ -394,7 +394,7 @@ def send_changes(data):
 				if data[j][i + 1] != '':
 					prior_table[data[j][0]][i] = str(data[j][i + 1])
 			ind_trip = gt.find_trip_ind(data[j][0], data_trip)
-			prior_table[data[j][0]] = prior_table[data[j][0]][:3] + gt.find_best(ind_trip, data[j], drivers, j, data_car, data_trip)
+			prior_table[data[j][0]] = prior_table[data[j][0]][:3] + gt.find_best(ind_trip, data[j], active_drivers, j, data_car, data_trip)
 		except:
 			print('Bad sending changes')
 
