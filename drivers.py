@@ -390,6 +390,10 @@ def send_changes(data):
 		if j < 10:
 			num = '0' + num
 		try:
+			try:
+				prior_table[data[j][0]]
+			except:
+				continue
 			for i in range(3):
 				if data[j][i + 1] != '':
 					prior_table[data[j][0]][i] = str(data[j][i + 1])
