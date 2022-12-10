@@ -502,13 +502,14 @@ def request_driver(prior, chat_id):
 
 def pathetic_news():
 	for driver in active_drivers:
-		for prior in prior_table:
-			try:
-				if prior_table[prior][3] == driver:	
-					break
-			except:
-				continue
-		else:
+		#for prior in prior_table:
+		#	try:
+		#		if prior_table[prior][3] == driver:	
+		#			break
+		#	except:
+		#		continue
+		#else:
+		if flag_took[driver] == 0:
 			send_message(driver.split('_')[0], 'К сожалению, заказов для машины ' + active_drivers[driver][0] + ' на сегодня больше не осталось (если только кто-то не откажется от уже принятого)')
 
 def check_message(message):
