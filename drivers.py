@@ -410,6 +410,7 @@ def send_changes(data):
 			if not check_car_new_vol(data[j], num):
 				n = prior_table[data[j][0]][3].split('_')[1]
 				flag_another_driver[data[j][0] + '_' + str(n)] = 0
+				driver = prior_table[data[j][0]][3]
 				reject_driver(prior_table[data[j][0]][3].split('_')[0], data[j][0], 'Объем груза изменен и больше не подходит вашей машине')
 				try:
 					#if active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]][3] >= 0:
@@ -421,7 +422,7 @@ def send_changes(data):
 							num_of_nums += 1
 						except:
 							break
-					gt.clear_data(int(data[j][0][len(data[j][0]) - num_of_nums:]), prior_table, data_car, data_trip, trips)
+					gt.clear_data(int(data[j][0][len(data[j][0]) - num_of_nums:]), prior_table, active_drivers[driver], data_car, data_trip, trips)
 					#active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]]
 				except:
 					print('Clear table')
@@ -575,7 +576,7 @@ def check_message(message):
 						num_of_nums += 1
 					except:
 						break
-				gt.clear_data(int(ddd[len(ddd.split('_')[0]) - num_of_nums:].split('_')[0]), prior_table, data_car, data_trip, trips)
+				gt.clear_data(int(ddd[len(ddd.split('_')[0]) - num_of_nums:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 				#active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], 
 			reject_driver(chat_id, ddd.split('_')[0], 'Вы отказались от заказа')
 			active_drivers[str(chat_id) + '_' + ddd.split('_')[1]][3] = -1
