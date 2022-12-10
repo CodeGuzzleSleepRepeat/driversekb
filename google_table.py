@@ -390,6 +390,7 @@ def check_driver(driver, line, prior, data_car, data_trip):
 	except:
 		pass
 	try:
+		print('TIME', timing[ind_car][1], line[1])
 		if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
 			print(int(timing[ind_car][1].split(':')[0]), int(line[1].split(':')[0]))
 			return False
