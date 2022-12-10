@@ -294,7 +294,7 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 	
 
 
-def clear_data(ind, prior_table, data_car, data_trip, data):
+def clear_data(ind, prior_table, driver_data, data_car, data_trip, data):
 	global north
 
 	counter = 0
@@ -308,7 +308,7 @@ def clear_data(ind, prior_table, data_car, data_trip, data):
 			counter += 1
 
 	
-	#ind_car = find_car_ind(driver_data[0], data_car)
+	ind_car = find_car_ind(driver_data[0], data_car)
 	ind_trip = find_trip_ind(data[ind], data_trip)
 
 	if data_trip[ind_trip][11] == 'Север (C)':
