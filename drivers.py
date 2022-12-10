@@ -357,7 +357,10 @@ def check_updates():
 	send_changes(changes_new)
 
 def check_car_new_vol(line, num):
-	ind_car = gt.find_car_ind(active_drivers[prior_table[line[0]][3]][0], data_car)
+	try:
+		ind_car = gt.find_car_ind(active_drivers[prior_table[line[0]][3]][0], data_car)
+	except:
+		return False
 	try:
 		
 		if data_car[ind_car][5] != 'v' and line[1] == '10':		#Грузоподъемность
@@ -398,7 +401,7 @@ def send_changes(data):
 				if data[j][i + 1] != '':
 					prior_table[data[j][0]][i] = str(data[j][i + 1])
 			ind_trip = gt.find_trip_ind(data[j][0], data_trip)
-			prior_table[data[j][0]] = prior_table[data[j][0]][:3] + gt.find_best(ind_trip, data[j], active_drivers, j, data_car, data_trip)
+			prior_table[data[j][0]] = prior_table[data[j][0]][:4] + gt.find_best(ind_trip, data[j], active_drivers, j, data_car, data_trip)
 		except:
 			print('Bad sending changes')
 
