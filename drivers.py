@@ -308,12 +308,10 @@ def check_driver_time():
 		try:
 			now = datetime.datetime.now()
 			if flag_task[driver] == 1 and (now - cur_time[driver]).total_seconds() > 3600:
-				print('Task driver', driver)
 				cur_time[driver] = now
 				try:
 					trip = find_trip(driver.split('_')[0])
 					flag_task[driver] = 0
-					print('Driver1', driver)
 					if trip == -1:
 						continue
 					reject_driver(int(driver.split('_')[0]), trip, 'Вы не согласились на заказ за час - он предложен другому исполнителю')
@@ -387,7 +385,7 @@ def check_car_new_vol(line, num):
 
 def send_changes(data):
 	length = len(data)
-	print(data)
+
 	for j in range(length):
 		num = str(j)
 		if j < 10:
