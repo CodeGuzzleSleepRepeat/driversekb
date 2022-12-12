@@ -167,7 +167,7 @@ def find_trip_ind(trip, data_trip):
 			int(trip[llll - i - 1])
 			num_of_nums += 1
 		except:
-			return -1
+			break
 	for i in range(length_trip):
 		if data_trip[i][0][:len(data_trip[i][0]) - 2] == trip[:llll - num_of_nums]:
 			ind_trip = i
