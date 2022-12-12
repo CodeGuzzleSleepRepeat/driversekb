@@ -399,11 +399,12 @@ def send_changes(data):
 				if data[j][i + 1] != '':
 					prior_table[data[j][0]][i] = str(data[j][i + 1])
 			ind_trip = gt.find_trip_ind(data[j][0], data_trip)
+			if ind_trip == -1:
+				print('Index of trip')
 			prior_table[data[j][0]] = prior_table[data[j][0]][:4] + gt.find_best(ind_trip, data[j], active_drivers, j, data_car, data_trip)
 		except:
 			print('Bad sending changes')
 
-		print(data[j][0])
 		try:
 			if not check_car_new_vol(data[j], num):
 				n = prior_table[data[j][0]][3].split('_')[1]
@@ -483,7 +484,7 @@ def request_driver(prior, chat_id):
 
 	mes = form_mes(prior_table[prior], prior)
 
-
+	print('Loook', prior_table[prior])
 	try:
 		driver = prior_table[prior][3]
 	except:
