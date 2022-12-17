@@ -191,117 +191,7 @@ def check_time2():
 		for driver in drivers:
 			flag_ready[driver] = 0
 
-def check_time3():
-	try:
-		flag_date3[datetime.date.today().strftime("%d.%m.%y")]
-	except:
-		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
-	if datetime.datetime.now().hour == 12 and datetime.datetime.now().minute == 0 and flag_date3[datetime.date.today().strftime("%d.%m.%y")] == 0:		
-		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 1
-		try:
-			gt.del_driver_from_table(data_car)
-		except:
-			ii = 0
-		for driver in drivers:
-			flag_ready[driver] = 1
 
-			for car in company:
-				if company[car][0] == driver:
-					flag_driver[driver] = 1
-					reply_markup_cars(driver, 'Готовы ли вы работать завтра утром? Если да - выберите, пожалуйста, номер машины', car)
-					break
-			else:
-				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
-
-		active_drivers.clear()
-	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
-		flag_date3[datetime.date.today().strftime("%d.%m.%y")] = 0
-		for driver in drivers:
-			flag_ready[driver] = 0
-
-def check_time4():
-	try:
-		flag_date4[datetime.date.today().strftime("%d.%m.%y")]
-	except:
-		flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 0
-	if datetime.datetime.now().hour == 14 and datetime.datetime.now().minute == 0 and flag_date4[datetime.date.today().strftime("%d.%m.%y")] == 0:		
-		flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 1
-		try:
-			gt.del_driver_from_table(data_car)
-		except:
-			ii = 0
-		for driver in drivers:
-			flag_ready[driver] = 1
-
-			for car in company:
-				if company[car][0] == driver:
-					flag_driver[driver] = 1
-					reply_markup_cars(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите, пожалуйста, номер машины', car)
-					break
-			else:
-				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
-
-		active_drivers.clear()
-	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
-		flag_date4[datetime.date.today().strftime("%d.%m.%y")] = 0
-		for driver in drivers:
-			flag_ready[driver] = 0
-
-def check_time5():
-	try:
-		flag_date5[datetime.date.today().strftime("%d.%m.%y")]
-	except:
-		flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 0
-	if datetime.datetime.now().hour == 15 and datetime.datetime.now().minute == 0 and flag_date5[datetime.date.today().strftime("%d.%m.%y")] == 0:		
-		flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 1
-		try:
-			gt.del_driver_from_table(data_car)
-		except:
-			ii = 0
-		for driver in drivers:
-			flag_ready[driver] = 1
-
-			for car in company:
-				if company[car][0] == driver:
-					flag_driver[driver] = 1
-					reply_markup_cars(driver, 'Готовы ли вы работать завтра утром? Если да - выберите, пожалуйста, номер машины', car)
-					break
-			else:
-				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
-
-		active_drivers.clear()
-	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
-		flag_date5[datetime.date.today().strftime("%d.%m.%y")] = 0
-		for driver in drivers:
-			flag_ready[driver] = 0
-
-def check_time6():
-	try:
-		flag_date6[datetime.date.today().strftime("%d.%m.%y")]
-	except:
-		flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
-	if datetime.datetime.now().hour == 16 and datetime.datetime.now().minute == 0 and flag_date6[datetime.date.today().strftime("%d.%m.%y")] == 0:		
-		flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 1
-		try:
-			gt.del_driver_from_table(data_car)
-		except:
-			ii = 0
-		for driver in drivers:
-			flag_ready[driver] = 1
-
-			for car in company:
-				if company[car][0] == driver:
-					flag_driver[driver] = 1
-					reply_markup_cars(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите, пожалуйста, номер машины', car)
-					break
-			else:
-				reply_ip_markup(driver, 'Готовы ли вы работать сегодня после обеда? Если да - выберите ИП')
-
-		active_drivers.clear()
-	if datetime.datetime.now().hour == 0 and datetime.datetime.now().minute == 0:
-		flag_date6[datetime.date.today().strftime("%d.%m.%y")] = 0
-		for driver in drivers:
-			flag_ready[driver] = 0
 
 def check_driver_time():
 	for driver in active_drivers:
@@ -406,11 +296,11 @@ def send_changes(data):
 			print('Bad sending changes')
 
 		try:
-			if not check_car_new_vol(data[j], num):
-				n = prior_table[data[j][0]][3].split('_')[1]
-				flag_another_driver[data[j][0] + '_' + str(n)] = 0
-				driver = prior_table[data[j][0]][3]
-				reject_driver(prior_table[data[j][0]][3].split('_')[0], data[j][0], 'Объем груза изменен и больше не подходит вашей машине')
+			n = prior_table[data[j][0]][3].split('_')[1]
+			driver = prior_table[data[j][0]][3]
+			if not check_car_new_vol(data[j], num) or not gt.check_driver(active_drivers[driver][0], prior_table[data[j][0]], data[j][0], data_car, data_trip):
+				flag_another_driver[data[j][0] + '_' + str(n)] = 0	
+				reject_driver(prior_table[data[j][0]][3].split('_')[0], data[j][0], 'Изменены объем груза и/или время, ваша машина больше не подходит')
 				try:
 					#if active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]][3] >= 0:
 					llll = len(data[j][0])
