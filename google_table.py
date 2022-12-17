@@ -533,18 +533,26 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			ind_car1 = find_car_ind(drivers[sorted_drivers[i]][0], data_car)
 			ind_car2 = find_car_ind(drivers[sorted_drivers[i + 1]][0], data_car)
 			try:
-				num1 = int(data_car[ind_car1][14][23])
+				num1 = int(data_car[ind_car1][23])
 			except:
 				num1 = 0
 			try:
-				num2 = int(data_car[ind_car2][14][23])
+				num2 = int(data_car[ind_car2][23])
 			except:
 				num2 = 0
-			if data_trip[ind_trip][11] != 'город' and num1 > num2:
+			try:
+				num_km = int(data_trip[ind_trip][1])
+			except:
+				num_km = 0
+				
+			if data_trip[ind_trip][11] != 'город' and num_km < 500 and num1 > num2:
 				tmp = sorted_drivers[i]
 				sorted_drivers[i] = sorted_drivers[i + 1]
 				sorted_drivers[i + 1] = tmp
-
+			elif data_trip[ind_trip][11] != 'город' and num1 > num2:
+				tmp = sorted_drivers[i + 1]
+				sorted_drivers[i + 1] = sorted_drivers[i]
+				sorted_drivers[i] = tmp
 
 	for i in range(length_2):
 		ind_car = find_car_ind(drivers[sorted_drivers_sec_prev[i]][0], data_car)
