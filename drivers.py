@@ -425,7 +425,7 @@ def send_changes(data):
 					#active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]]
 				except:
 					print('Clear table')
-			else:
+			elif flag_another_driver[data[j][0] + '_' + str(n)] == 1:
 				mes = form_mes(prior_table[data[j][0]], data[j][0] + num)
 				send_message(prior_table[data[j][0]][3].split('_')[0], 'Детали поездки изменились:\n' + mes)
 		except:
