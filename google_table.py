@@ -16,6 +16,7 @@ north = ''
 km = {}
 prev_km = {}
 timing = {}
+timing_prev = {}
 orders = {}
 num_of_days = {}
 taken = {}
@@ -276,6 +277,7 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 
 	ind_car = find_car_ind(driver_data[0], data_car)
 	ind_trip = find_trip_ind(data[ind][0], data_trip)
+	timing_prev[ind_car] = timing[ind_car]
 	timing[ind_car] = get_return_time(data_trip, ind_trip)
 	counter = 0
 	while counter < 10:
@@ -325,6 +327,7 @@ def clear_data(ind, prior_table, driver_data, data_car, data_trip, data):
 	#minus_km(ind_car, data_car, data_trip, driver_data[0])
 
 	timing[ind_car] = [datetime.datetime.today(), '-1']
+	timing_prev[ind_car] = [datetime.datetime.today(), '-1']
 
 def del_driver_from_table(data_car):
 	counter = 0
@@ -361,7 +364,7 @@ def add_driver_to_table(cur_driver, prior_table, data_car):
 			counter += 1
 	return 0
 
-def check_driver(driver, line, prior, data_car, data_trip):
+def check_driver(timing, driver, line, prior, data_car, data_trip):
 	global today
 
 	ind_car = find_car_ind(driver, data_car)
