@@ -298,7 +298,8 @@ def send_changes(data):
 		try:
 			n = prior_table[data[j][0]][3].split('_')[1]
 			driver = prior_table[data[j][0]][3]
-			if not check_car_new_vol(data[j], num) or not gt.check_driver(active_drivers[driver][0], prior_table[data[j][0]], data[j][0], data_car, data_trip):
+			gt.orders[active_drivers[driver][0]] = 0
+			if not check_car_new_vol(data[j], num) or not gt.check_driver(gt.timing_prev, active_drivers[driver][0], prior_table[data[j][0]], data[j][0], data_car, data_trip):
 				flag_another_driver[data[j][0] + '_' + str(n)] = 0	
 				reject_driver(prior_table[data[j][0]][3].split('_')[0], data[j][0], 'Изменены объем груза и/или время, ваша машина больше не подходит')
 				try:
@@ -383,7 +384,7 @@ def request_driver(prior, chat_id):
 
 	
 
-	if gt.check_driver(active_drivers[driver][0], prior_table[prior], prior, data_car, data_trip):
+	if gt.check_driver(gt.timing, active_drivers[driver][0], prior_table[prior], prior, data_car, data_trip):
 		inline_keyboard(driver, mes, str(prior))
 		num_of_orders += 1 
 		cur_time[driver] = datetime.datetime.now()		
