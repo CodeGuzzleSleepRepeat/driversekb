@@ -58,6 +58,7 @@ flag_sec = 0
 num_of_orders = 0
 taken_orders = 0
 
+flag_distrib = 0
 
 proxies = {
 	'http' : 'http://proxy.server:3128'
@@ -411,6 +412,7 @@ def check_message(message):
 	global taken_orders
 	global num_of_orders
 	global admin_id
+	global flag_distrib
 
 	if str(message).find('callback_query') > -1:
 		chat_id = message['callback_query']['message']['chat']['id']
@@ -573,6 +575,7 @@ def check_message(message):
 		taken_orders = 0
 		num_of_orders = 0
 		flag_admin[chat_id] = 0
+		flag_distrib = 1
 		print('ACTIVE', active_drivers)
 		for i in range(50):
 			num = str(i)
@@ -702,6 +705,7 @@ def main():
 	global flag_sec
 	global update_time
 	global update_time2
+	global flag_distrib
 
 
 	
@@ -746,7 +750,7 @@ def main():
 			try:
 				thread_check = Thread(target = checking, args = [])
 				thread_check.start()
-				if (datetime.datetime.now() - update_time).total_seconds() > 180:
+				if (datetime.datetime.now() - update_time).total_seconds() > 180 and flag_distrib == 1:
 					thread_update = Thread(target = check_updates, args = [])
 					thread_update.start()
 				if (datetime.datetime.now() - update_time2).total_seconds() > 1800:					
