@@ -50,6 +50,7 @@ flag_admin = {}
 flag_num_cars = {}
 flag_new_car = {}
 flag_new_admin = {}
+flag_disagree = {}
 longing = {}
 
 flag_time = 0
@@ -427,10 +428,11 @@ def check_message(message):
 			except:
 				pass
 			
-			print('Task', str(chat_id) + '_' + ddd.split('_')[1])
+			
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			flag_another_driver[ddd] = 1
 			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 1 
+			flag_disagree[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			
 			
 			
@@ -456,6 +458,15 @@ def check_message(message):
 		if str(message['callback_query']['data']).find('Не согласен') > -1:			
 			taken_orders -= 1
 			ddd = longing[ddd[11:].split('_')[0]] + '_' + ddd.split('_')[1]
+			
+			try:
+				if flag_disagree[str(chat_id) + '_' + ddd.split('_')[1]] == 1:
+					return
+			except:
+				pass
+
+			flag_disagree[str(chat_id) + '_' + ddd.split('_')[1]] = 1
+			
 			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 
 			flag_another_driver[ddd] = 0
