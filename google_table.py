@@ -364,7 +364,7 @@ def add_driver_to_table(cur_driver, prior_table, data_car):
 			counter += 1
 	return 0
 
-def check_driver(timing, driver, line, prior, data_car, data_trip):
+def check_driver(timing, timing_prev, driver, line, prior, data_car, data_trip):
 	global today
 
 	ind_car = find_car_ind(driver, data_car)
@@ -387,6 +387,8 @@ def check_driver(timing, driver, line, prior, data_car, data_trip):
 	try:
 		if timing[ind_car][0] < 0:
 			timing[ind_car][0] = (today + datetime.timedelta( num_of_days[prior[len(prior) - num_of_nums:]])).date()
+		if timing_prev[ind_car][0] < 0:
+			timing_prev[ind_car][0] = (today + datetime.timedelta( num_of_days[prior[len(prior) - num_of_nums:]])).date()
 	except:
 		pass
 
