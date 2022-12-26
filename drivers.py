@@ -377,7 +377,6 @@ def request_driver(prior, chat_id):
 
 	mes = form_mes(prior_table[prior], prior)
 
-	print('Loook', prior_table[prior])
 	try:
 		driver = prior_table[prior][3]
 	except:
@@ -391,8 +390,7 @@ def request_driver(prior, chat_id):
 		num_of_orders += 1 
 		cur_time[driver] = datetime.datetime.now()		
 		flag_task[driver] = 1
-		
-		print('Driver2', driver)
+
 	else:
 		reject_driver(chat_id, prior, '')
 
@@ -587,16 +585,13 @@ def check_message(message):
 		num_of_orders = 0
 		flag_admin[chat_id] = 0
 		flag_distrib = 1
-		print('ACTIVE', active_drivers)
 		for i in range(50):
 			num = str(i)
 			if i < 10:
 				num = '0' + num
 			flag_took[str(chat_id) + '_' + num] = 0
 		for driver in active_drivers:
-			print('MAIN', driver)
 			gt.orders[active_drivers[driver][0]] = 0
-		print('OREDR', gt.orders)
 		trips, i = gt.parse_table()
 		if i == -1:
 			send_message(chat_id, 'Невозможно получить все данные из таблицы, попробуйте позже')
