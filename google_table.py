@@ -49,7 +49,6 @@ def parse_table():
 			counter += 1
 	data_changes = sh.get_all_values()[1:]
 	today = datetime.datetime.strptime(data_changes[0][0], "%d.%m.%Y")
-	print('Today', today)
 	res_data = []
 	i = 0
 	data_changes = data_changes[1:]
@@ -67,7 +66,6 @@ def parse_table():
 		except:
 			continue
 		i += 1
-	print('SIZE2', sys.getsizeof(res_data))
 	return res_data, i
 
 def parse_changes():
@@ -433,10 +431,10 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 			if line[1][len(line[1]) - 1] == '+' or line[1][len(line[1]) - 1] == '-':
 				#line[1] = line[1][:len(line[1]) - 1]
 				if len(data_car[ind_car][6]) == 0 and line[1] == '20-':		#Грузоподъемность
-					print('Hello1')
+
 					continue
 				if len(data_car[ind_car][7]) == 0 and line[1] == '20+':
-					print('Hello2')
+
 					continue
 				if len(data_car[ind_car][8]) == 0 and line[1] == '30-':
 					continue
@@ -452,49 +450,47 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 					continue
 			elif line[1] == 'фура':
 				if len(data_car[ind_car][14]) == 0:
-					print('Hello5')
 					continue
 			elif int(data_car[ind_car][2]) < int(line[1]):
-				print('Vol', data_car[ind_car][0], line[1], int(line[1]))
 				continue
 		except:
 			time.sleep(0.1)
 			continue
 		
 		if len(data_trip[ind_trip][13]) == 0 and data_car[ind_car][20] == 'т20':		#Тип машины
-			print('Hello6')
+
 			continue
 		if len(data_trip[ind_trip][14]) == 0 and data_car[ind_car][20] == 'т30':
-			print('type', data_car[ind_car][0])
+
 			continue
 		if len(data_trip[ind_trip][15]) == 0 and data_car[ind_car][20] == 'т40':
-			print('type', data_car[ind_car][0])
+
 			continue
 		if len(data_trip[ind_trip][16]) == 0 and data_car[ind_car][20] == 'т50':
-			print('type', data_car[ind_car][0])
+
 			continue
 		if len(data_trip[ind_trip][17]) == 0 and data_car[ind_car][20] == 'фура':
-			print('type', data_car[ind_car][0])
+
 			continue
 		if len(data_trip[ind_trip][12]) == 0 and data_car[ind_car][20] == 'фургон':
 			continue
 		
 
 		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
-			print('Hello7')
+
 			continue
 		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11].find('Новоуральск') > -1:
-			print('Hello8')
+
 			continue
 		if len(data_car[ind_car][20]) == 0 and data_trip[ind_trip][11] == 'шатл':
-			print('Hello9')
+
 			continue
 
 		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][15]) == 0:
-			print('Hello10')
+
 			continue
 		if data_trip[ind_trip][11] == 'межгород' and len(data_car[ind_car][17]) == 0:
-			print('Hello11')
+
 			continue
 
 
