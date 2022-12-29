@@ -651,6 +651,8 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		taken[data[i][0] + num] = False
 
 		ind_trip = find_trip_ind(data[i][0], data_trip)
+		if ind_trip == -1:
+			print('Index of trip_')
 
 		data[i] = [data[i][0], data[i][3], data[i][4], data[i][5]]
 		sorted_drivers = find_best(ind_trip, data[i], drivers, i, data_car, data_trip)
