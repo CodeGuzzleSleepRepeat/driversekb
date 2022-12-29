@@ -226,7 +226,7 @@ def check_updates():
 	length = len(changes)
 	length2 = len(changes_new)
 	for i in range(min(length, length2)):
-		if changes_new[i][1:] == changes[i][1:] or (changes_new[1] == '' and changes_new[2] == '' and changes_new[3] == ''):
+		if changes_new[i][1:4] == changes[i][1:4] or (changes_new[1] == '' and changes_new[2] == '' and changes_new[3] == ''):
 			to_del.append(i)			
 		else:
 			changes[i] = changes_new[i]
@@ -294,6 +294,11 @@ def send_changes(data):
 			if ind_trip == -1:
 				print('Index of trip')
 			prior_table[data[j][0]] = prior_table[data[j][0]][:4] + gt.find_best(ind_trip, data[j], active_drivers, j, data_car, data_trip)
+			
+			if data[j][4] == '':
+				request_driver(data[j][0], prior_table[data[j][0]][3].split('_')[0])
+				continue
+
 		except:
 			print('Bad sending changes')
 
