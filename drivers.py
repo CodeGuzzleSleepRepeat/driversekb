@@ -456,7 +456,10 @@ def check_message(message):
 					break
 			if ddd.find('ЕКБ склад') == 0:
 				num_of_nums -= 1
-			print('Driver data', str(chat_id) + '_' + ddd.split('_')[1], active_drivers[str(chat_id) + '_' + ddd.split('_')[1]])
+			try:
+				print('Driver data', int(ddd[llll - num_of_nums:].split('_')[0]),  str(chat_id) + '_' + ddd.split('_')[1], active_drivers[str(chat_id) + '_' + ddd.split('_')[1]])
+			except:
+				pass
 			gt.input_data(int(ddd[llll - num_of_nums:].split('_')[0]), prior_table, active_drivers[str(chat_id) + '_' + ddd.split('_')[1]], data_car, data_trip, trips)
 			taken_orders += 1
 			if taken_orders == num_of_orders:
