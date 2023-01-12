@@ -275,8 +275,11 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 
 	ind_car = find_car_ind(driver_data[0], data_car)
 	ind_trip = find_trip_ind(data[ind][0], data_trip)
-	timing_prev[ind_car] = timing[ind_car]
-	timing[ind_car] = get_return_time(data_trip, ind_trip)
+	if ind_car != -1:
+		timing_prev[ind_car] = timing[ind_car]
+		timing[ind_car] = get_return_time(data_trip, ind_trip)
+	else:
+		print('Driver data')
 	counter = 0
 	while counter < 10:
 		try:
