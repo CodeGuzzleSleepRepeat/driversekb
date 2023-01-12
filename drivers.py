@@ -422,7 +422,12 @@ def check_message(message):
 		chat_id = message['callback_query']['message']['chat']['id']
 		ddd = message['callback_query']['data']
 		if str(message['callback_query']['data']).find('Согласен') > -1:
+			try:
+				print(longing, ddd)
+			except:
+				pass
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
+			
 			
 			try:
 				if flag_another_driver[ddd] == 1 and flag_took[str(chat_id) + '_' + ddd.split('_')[1]] == 0:
