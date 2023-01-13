@@ -423,7 +423,7 @@ def check_message(message):
 		ddd = message['callback_query']['data']
 		if str(message['callback_query']['data']).find('Согласен') > -1:
 			try:
-				print(longing, ddd)
+				print('longing:', longing, ddd)
 			except:
 				pass
 			ddd = longing[ddd[8:].split('_')[0]] + '_' + ddd.split('_')[1]
