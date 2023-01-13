@@ -439,6 +439,7 @@ def check_message(message):
 			
 			flag_task[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			flag_another_driver[ddd] = 1
+			flag_took[chat_id] = 1
 			flag_took[str(chat_id) + '_' + ddd.split('_')[1]] = 1 
 			flag_disagree[str(chat_id) + '_' + ddd.split('_')[1]] = 0
 			
