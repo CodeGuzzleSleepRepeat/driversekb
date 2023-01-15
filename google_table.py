@@ -59,12 +59,16 @@ def parse_table():
 				num = '0' + num
 
 			num_of_days[num] = flag
-
+			
+			if len(line) >= 5:
+				res_data.append([line[0], line[1], line[2], line[3], line[4], line[5]])
+			else:
+				res_data.append([])
+				
 			if line[0][2] == '.':
 				flag += 1
-			res_data.append([line[0], line[1], line[2], line[3], line[4], line[5]])
 		except:
-			continue
+			pass
 		i += 1
 	return res_data, i
 
@@ -89,11 +93,16 @@ def parse_changes():
 			#if line[0].find('день') == len(line[0]) - 4:
 				#num_of_days[line[0] + num] = 1
 			num = str(i)
+			
 			if i < 10:
 				num = '0' + num
-			res_data.append([line[0] + num, line[7], line[8], line[9], line[1]])
+				
+			if len(line) >= 9:
+				res_data.append([line[0] + num, line[7], line[8], line[9], line[1]])
+			else:
+				res_data.append(['', '', '', '', ''])
 		except:
-			continue
+			pass
 		i += 1
 	return res_data, i
 
