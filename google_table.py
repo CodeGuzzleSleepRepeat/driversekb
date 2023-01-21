@@ -378,6 +378,9 @@ def check_driver(timing, timing_prev, driver, line, prior, data_car, data_trip):
 	global today
 
 	ind_car = find_car_ind(driver, data_car)
+	if ind_car == -1:
+		print('index of car', driver)
+		return False
 
 	try:
 		if orders[driver] == 1:
@@ -403,7 +406,7 @@ def check_driver(timing, timing_prev, driver, line, prior, data_car, data_trip):
 		pass
 
 	try:
-		print(timing[ind_car][0], (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date())
+		print('Days', timing[ind_car][0], (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date())
 		if timing[ind_car][0] > (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():									# Время
 			print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
 			return False
