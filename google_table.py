@@ -97,7 +97,7 @@ def parse_changes():
 			if i < 10:
 				num = '0' + num
 				
-			try
+			try:
 				res_data.append([line[0] + num, line[7], line[8], line[9], line[1]])
 			except:
 				res_data.append(['', '', '', '', ''])
