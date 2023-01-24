@@ -286,7 +286,8 @@ def send_changes(data):
 			try:
 				prior_table[data[j][0]]
 			except:
-				continue
+				prior_table[data[j][0]] = []
+				
 			for i in range(3):
 				if data[j][i + 1] != '':
 					prior_table[data[j][0]][i] = str(data[j][i + 1])
