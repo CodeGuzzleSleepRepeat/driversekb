@@ -321,7 +321,7 @@ def send_changes(data):
 						except:
 							break
 					gt.clear_data(int(data[j][0][len(data[j][0]) - num_of_nums:]), prior_table, active_drivers[driver], data_car, data_trip, trips)
-					#active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]]
+					
 				except:
 					print('Clear table')
 			elif flag_another_driver[data[j][0] + '_' + str(n)] == 1:
