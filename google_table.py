@@ -10,6 +10,7 @@ sh = gc.open("DriversDistribTable")
 
 data_car = []
 data_trip = []
+date_change = []
 
 north = ''
 
@@ -51,6 +52,7 @@ def parse_table():
 	today = datetime.datetime.strptime(data_changes[0][0], "%d.%m.%Y")
 	res_data = []
 	i = 0
+	cur = 0
 	data_changes = data_changes[1:]
 	for line in data_changes:
 		try:
@@ -67,6 +69,8 @@ def parse_table():
 				
 			if line[0][2] == '.':
 				flag += 1
+				date_change[cur] = i
+				cur += 1 
 		except:
 			pass
 		i += 1
@@ -238,14 +242,21 @@ def minus_km(ind_car, data_car, data_trip, driver_id):
 	if len(km[driver_id]) > 7:
 		km[driver_id] = km[driver_id][:8]
 
-def get_return_time(data_trip, ind_trip):
+def get_return_time(data_trip, ind_trip, ind):
+	global today
+
+	for cur in date_change:
+		if ind < cur:
+			cur_date = today + datetime.timedelta(days = cur)
+			break
+
 	num = 0
 	if data_trip[ind_trip][9] == 'Возврат во второй день':
 		num = 1
 	elif data_trip[ind_trip][9] == 'Возврат на третий день':
 		num = 2
 
-	return_day = datetime.date.today() + datetime.timedelta(days = num)
+	return_day = cur_date + datetime.timedelta(days = num)
 
 
 	return_time = data_trip[ind_trip][10][3:]
@@ -286,7 +297,7 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 	ind_trip = find_trip_ind(data[ind][0], data_trip)
 	if ind_car != -1:
 		timing_prev[ind_car] = timing[ind_car]
-		timing[ind_car] = get_return_time(data_trip, ind_trip)
+		timing[ind_car] = get_return_time(data_trip, ind_trip, ind)
 	else:
 		print('Driver data')
 	counter = 0
