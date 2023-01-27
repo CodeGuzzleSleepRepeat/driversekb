@@ -249,6 +249,8 @@ def get_return_time(data_trip, ind_trip, ind):
 		if ind < cur:
 			cur_date = today + datetime.timedelta(days = cur)
 			break
+	else:
+		cur_date = today + datetime.timedelta(days = date_change[len(date_change) - 1])
 
 	num = 0
 	if data_trip[ind_trip][9] == 'Возврат во второй день':
@@ -297,9 +299,13 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 	ind_trip = find_trip_ind(data[ind][0], data_trip)
 	if ind_car != -1:
 		timing_prev[ind_car] = timing[ind_car]
-		timing[ind_car] = get_return_time(data_trip, ind_trip, ind)
+		try:
+			timing[ind_car] = get_return_time(data_trip, ind_trip, ind)
+		except:
+			print('timing input')
 	else:
-		print('Driver data')
+		print('input ind')
+		
 	counter = 0
 	while counter < 10:
 		try:
