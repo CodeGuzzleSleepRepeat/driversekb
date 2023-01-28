@@ -69,8 +69,7 @@ def parse_table():
 				
 			if line[0][2] == '.':
 				flag += 1
-				date_change[cur] = i
-				cur += 1 
+				date_change.append(i)
 		except:
 			pass
 		i += 1
