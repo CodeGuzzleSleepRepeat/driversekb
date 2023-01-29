@@ -244,13 +244,16 @@ def minus_km(ind_car, data_car, data_trip, driver_id):
 def get_return_time(data_trip, ind_trip, ind):
 	global today
 
-	for cur in date_change:
-		if ind < cur:
-			cur_date = today + datetime.timedelta(days = cur)
+	for i in range(len(date_change)):
+		if ind < date_change[i]:
+			cur_date = today + datetime.timedelta(days = i)
 			break
 	else:
-		cur_date = today + datetime.timedelta(days = date_change[len(date_change) - 1])
+		cur_date = today + datetime.timedelta(days = len(date_change))
+		
 
+	print('Trip ', ind_trip, cur_date)
+	
 	num = 0
 	if data_trip[ind_trip][9] == 'Возврат во второй день':
 		num = 1
