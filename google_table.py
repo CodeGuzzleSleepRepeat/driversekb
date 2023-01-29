@@ -426,6 +426,11 @@ def check_driver(timing, timing_prev, driver, line, prior, data_car, data_trip):
 		pass
 
 	try:
+		timing[ind_car][0] = timing[ind_car][0].date()
+	except:
+		pass
+	
+	try:
 		print('Days', timing[ind_car][0], (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date())
 		if timing[ind_car][0] > (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():									# Время
 			print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
