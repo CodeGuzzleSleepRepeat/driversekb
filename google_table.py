@@ -36,6 +36,7 @@ def prev_order(str, prior):
 def parse_table():
 	global today
 
+	date_change.clear()
 	counter = 0
 	flag = 0
 	while True:
