@@ -301,7 +301,7 @@ def send_changes(data):
 				continue
 
 		except:
-			print('Bad sending changes')
+			pass
 
 		try:
 			n = prior_table[data[j][0]][3].split('_')[1]
