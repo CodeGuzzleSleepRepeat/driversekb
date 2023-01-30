@@ -426,7 +426,8 @@ def check_driver(timing, timing_prev, driver, line, prior, data_car, data_trip):
 		pass
 
 	try:
-		timing[ind_car][0] = timing[ind_car][0].date()
+		if timing[ind_car][0] != -1:
+			timing[ind_car][0] = timing[ind_car][0].date()
 	except:
 		pass
 	
