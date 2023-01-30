@@ -610,9 +610,14 @@ def check_message(message):
 		for driver in active_drivers:
 			flag_task[driver] = 0
 			cur_time[driver] = datetime.datetime.now()
-		for prior in prior_table:
-			if not gt.taken[prior]:
-				request_driver(prior, chat_id)
+			
+		try:
+			for prior in prior_table:
+				if not gt.taken[prior]:
+					request_driver(prior, chat_id)
+		except:
+			pass
+		
 		send_message(chat_id, 'Маршруты распределены, ожидаем ответов от исполнителей')
 		return
 
