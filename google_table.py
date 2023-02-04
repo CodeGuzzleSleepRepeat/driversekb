@@ -253,7 +253,7 @@ def get_return_time(data_trip, ind_trip, ind):
 		cur_date = today + datetime.timedelta(days = len(date_change))
 		
 
-	print('Trip ', ind_trip, cur_date)
+	#print('Trip ', ind_trip, cur_date)
 	
 	num = 0
 	if data_trip[ind_trip][9] == 'Возврат во второй день':
