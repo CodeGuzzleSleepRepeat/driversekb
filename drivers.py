@@ -360,8 +360,11 @@ def reject_driver(chat_id, prior, text):
 	if text != '':
 		send_message(chat_id, text)
 	try:
-		prior_table[prior] = prior_table[prior][:3] + prior_table[prior][4:]	
-		request_driver(prior, chat_id)
+		prior_table[prior] = prior_table[prior][:3] + prior_table[prior][4:]
+		gt.taken[prior] = False	
+		for prior_a in prior_table:
+			if not gt.taken[prior_a]:
+				request_driver(prior_a, chat_id)
 	except:
 		return
 
