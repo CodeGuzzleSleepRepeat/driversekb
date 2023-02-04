@@ -276,6 +276,7 @@ def check_car_new_vol(line, num):
 	return True
 
 def send_changes(data):
+	global taken_orders
 	length = len(data)
 
 	for j in range(length):
@@ -309,6 +310,7 @@ def send_changes(data):
 			gt.orders[active_drivers[driver][0]] = 0
 			if not check_car_new_vol(data[j], num) or not gt.check_driver(gt.timing_prev, gt.timing, active_drivers[driver][0], prior_table[data[j][0]], data[j][0], data_car, data_trip):
 				flag_another_driver[data[j][0] + '_' + str(n)] = 0	
+				taken_orders -= 1
 				reject_driver(prior_table[data[j][0]][3].split('_')[0], data[j][0], 'Изменены объем груза и/или время, ваша машина больше не подходит')
 				try:
 					#if active_drivers[str(chat_id) + '_' + prior_table[data[j][0]][3].split('_')[1]][3] >= 0:
