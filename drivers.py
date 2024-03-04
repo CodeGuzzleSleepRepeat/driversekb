@@ -744,49 +744,51 @@ def main():
 			#	thread_update.start()
 		except:
 			pass
+		try:
+			messages = get_updates(update_id)
+			for message in messages:
+				if update_id < message['update_id']:
+					update_id = message['update_id']
 
-		messages = get_updates(update_id)
-		for message in messages:
-			if update_id < message['update_id']:
-				update_id = message['update_id']
-
-				try:					
-					if str(message).find('query') == -1:
-						flag_start[message['message']['chat']['id']]					
-				except:
-					try:
-
-						flag_start[message['message']['chat']['id']] = 1
-						#flag_task[message['message']['chat']['id']] = 0
-						flag_table[message['message']['chat']['id']] = 0
-						flag_driver[message['message']['chat']['id']] = 0
-						flag_ready[message['message']['chat']['id']] = 0
-						flag_admin[message['message']['chat']['id']] = 0
-						flag_num_cars[message['message']['chat']['id']] = 0
-						flag_new_car[message['message']['chat']['id']] = 0
-						flag_new_distr[message['message']['chat']['id']] = 0
-
-
-						try:
-							username = message['message']['chat']['username']
-						except:
-							username = ''
-						if set([username]).issubset(admins):
-							admin_id.add(message['message']['chat']['id'])
-							reply_admin_markup(message['message']['chat']['id'], 'Добро пожаловать')
-						elif message['message']['chat']['id'] != group_id:
-							send_message(message['message']['chat']['id'], 'Добро пожаловать')
-							drivers.append(message['message']['chat']['id'])
+					try:					
+						if str(message).find('query') == -1:
+							flag_start[message['message']['chat']['id']]					
 					except:
-						pass
+						try:
 
-				try:
-					thread = Thread(target = check_message, args = [message])
-					thread.start()
-				except:
-					continue
+							flag_start[message['message']['chat']['id']] = 1
+							#flag_task[message['message']['chat']['id']] = 0
+							flag_table[message['message']['chat']['id']] = 0
+							flag_driver[message['message']['chat']['id']] = 0
+							flag_ready[message['message']['chat']['id']] = 0
+							flag_admin[message['message']['chat']['id']] = 0
+							flag_num_cars[message['message']['chat']['id']] = 0
+							flag_new_car[message['message']['chat']['id']] = 0
+							flag_new_distr[message['message']['chat']['id']] = 0
 
-		time.sleep(0.1)
+
+							try:
+								username = message['message']['chat']['username']
+							except:
+								username = ''
+							if set([username]).issubset(admins):
+								admin_id.add(message['message']['chat']['id'])
+								reply_admin_markup(message['message']['chat']['id'], 'Добро пожаловать')
+							elif message['message']['chat']['id'] != group_id:
+								send_message(message['message']['chat']['id'], 'Добро пожаловать')
+								drivers.append(message['message']['chat']['id'])
+						except:
+							pass
+
+					try:
+						thread = Thread(target = check_message, args = [message])
+						thread.start()
+					except:
+						continue
+
+			time.sleep(0.1)
+		except:
+			time.sleep(0.3)
 
 
 main()
