@@ -779,12 +779,12 @@ def main():
 							send_message(message['message']['chat']['id'], 'Добро пожаловать')
 							drivers.append(message['message']['chat']['id'])
 					except:
-							k = 0
+							pass
 
-				if True:
+				try:
 					thread = Thread(target = check_message, args = [message])
 					thread.start()
-				else:
+				except:
 					continue
 
 		time.sleep(0.1)
