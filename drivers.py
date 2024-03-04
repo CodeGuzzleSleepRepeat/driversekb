@@ -779,7 +779,7 @@ def main():
 							send_message(message['message']['chat']['id'], 'Добро пожаловать')
 							drivers.append(message['message']['chat']['id'])
 					except:
-							pass
+						pass
 
 				try:
 					thread = Thread(target = check_message, args = [message])
