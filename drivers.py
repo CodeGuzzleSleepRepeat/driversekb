@@ -5,7 +5,7 @@ from threading import Thread
 import google_table as gt
 import json
 
-#acc-824@driversdistrib.iam.gserviceaccount.com
+
 
 TOKEN = '5363932719:AAFPjX1oxBmSlSaDQisWiCvwLNTQYnwtO8w'
 URL = 'https://api.telegram.org/bot'
