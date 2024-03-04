@@ -747,10 +747,10 @@ def main():
 
 		messages = get_updates(update_id)
 		for message in messages:
-			print(message['message']['text'])
+			
 			if update_id < message['update_id']:
 				update_id = message['update_id']
-
+				print(message['message']['text'])
 				try:					
 					if str(message).find('query') == -1:
 						flag_start[message['message']['chat']['id']]					
