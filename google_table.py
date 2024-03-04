@@ -1,28 +1,83 @@
 import gspread
 import datetime
 import time
-import sys
+
 
 
 gc = gspread.service_account(filename='driversdistrib-ff44f21c020e.json')
-sh = gc.open("DriversDistribTable")
+shr = gc.open_by_url("https://docs.google.com/spreadsheets/d/11rmbc9L2bw_od5ngW8PY3e3gAO7kpN1uRsGc4AZXy5o/edit#gid=0")
 
 
 data_car = []
 data_trip = []
-date_change = []
 
 north = ''
 
 km = {}
 prev_km = {}
 timing = {}
-timing_prev = {}
 orders = {}
 num_of_days = {}
 taken = {}
 
-today = datetime.date.today()
+'''
+def parse_table():
+	data = []
+	tmp = []
+	i = 3
+	counter = 0
+	while True:
+		try:
+			tmp = sh.sheet1.row_values(i)
+		except:
+			if counter == 20:
+				print('Something went wron in parsing data')
+				return data, -1
+			time.sleep(10)
+			counter += 1
+			continue
+		
+		try:
+			tmp[3][0]
+			#if tmp[3][len(tmp[1]) - 1] == '+' or tmp[1][len(tmp[1]) - 1] == '-':
+				#	tmp[1] = tmp[1][:len(tmp[1]) - 1]
+				#	print(tmp[1])
+			data.append([tmp[0], tmp[3], tmp[4], tmp[5]])
+			tmp = []
+		except:
+			break
+		i += 1	
+		print(i)
+	return data, i
+
+
+def parse_changes():
+	data = []
+	tmp = []
+	i = 3
+	counter = 0
+	while True:
+		try:
+			tmp = sh.sheet1.row_values(i)
+			print(tmp)
+		except:
+			if counter == 20:
+				print('Something went wrong in parsing changes')
+				return data, -1
+			time.sleep(10)
+			counter += 1
+			continue
+
+		if True:
+			tmp[3][0]
+			data.append([tmp[0], tmp[7], tmp[8], tmp[9]])
+			tmp = []
+		else:
+			break
+		i += 1	
+		print(i)
+	return data, i
+'''
 
 def prev_order(str, prior):
 	hm = str.split(':')
@@ -30,64 +85,87 @@ def prev_order(str, prior):
 	if num_of_days[prior] > 0:
 		return False
 	if now.hour > int(hm[0]) or (now.hour == int(hm[0]) and now.minute > int(hm[1])):
+		#print(now.hour, int(hm[0]))
 		return True
 	return False
 
 def parse_table():
-	global today
-
-	date_change.clear()
 	counter = 0
-	flag = 0
-	while True:
-		try:
-			sh = gc.open("DriversDistribTable").get_worksheet(0)
-			break
-		except:
-			if counter == 10:
-				print('Something went wrong in parsing changes')
-				return data, -1
-			time.sleep(10)
-			counter += 1
-	data_changes = sh.get_all_values()[1:]
-	today = datetime.datetime.strptime(data_changes[0][0], "%d.%m.%Y")
+	flag = False
+	try:
+		#sh = gc.open("DriversDistribTable").get_worksheet(0)
+		sh = shr.get_worksheet(0)
+	except:
+		if counter == 20:
+			print('Something went wrong in parsing changes')
+			return data, -1
+		time.sleep(10)
+		counter += 1
+	data_changes = sh.get_all_values()[2:]
 	res_data = []
 	i = 0
-	cur = 0
-	data_changes = data_changes[1:]
 	for line in data_changes:
 		try:
+			#line[3][0]
 			num = str(i)
 			if i < 10:
 				num = '0' + num
 
-			num_of_days[num] = flag
-			
-			if len(line) >= 5:
-				res_data.append([line[0], line[1], line[2], line[3], line[4], line[5]])
+			if flag:
+				num_of_days[num] = 1
 			else:
-				res_data.append([])
-				
-			if line[0][2] == '.':
-				flag += 1
-				date_change.append(i)
+				num_of_days[num] = 0
+
+			if line[0][2] == '.' and len(line[0]) == 5:
+				flag = True
+			res_data.append([line[0], line[1], line[2], line[3], line[4], line[5]])
 		except:
-			pass
+			continue
 		i += 1
+	print(i)
 	return res_data, i
+
+def form_date(date):
+	date = date.split(' ')[0]
+	arr = date.split('-')
+	return arr[2] + '.' + arr[1] + '.' + arr[0]
+
+def parse_ready_distrib(data_distrib, table):
+	try:
+		#sh = gc.open("DriversDistribTable").get_worksheet(0)
+		sh = shr.get_worksheet(table)
+	except:
+		if counter == 20:
+			print('Something went wrong in parsing changes')
+			return data, -1
+		time.sleep(10)
+		counter += 1
+	data_changes = sh.get_all_values()[1:]
+	flag_date = 0
+	counter = 0
+
+	for line in data_changes:
+
+		if flag_date == 1:
+			line.append(counter)
+			data_distrib.append(line)
+		if line[0] == form_date(str(datetime.datetime.today())):
+			flag_date = 1
+		counter = counter + 1
+		
+
 
 def parse_changes():
 	counter = 0
-	while True:
-		try:
-			sh = gc.open("DriversDistribTable").get_worksheet(0)
-			break
-		except:
-			if counter == 10:
-				print('Something went wrong in parsing changes')
-				return data, -1
-			time.sleep(10)
-			counter += 1
+	try:
+		#sh = gc.open("DriversDistribTable").get_worksheet(0)
+		sh = shr.get_worksheet(0)
+	except:
+		if counter == 20:
+			print('Something went wrong in parsing changes')
+			return data, -1
+		time.sleep(10)
+		counter += 1
 	data_changes = sh.get_all_values()[2:]
 	res_data = []
 	i = 0
@@ -97,16 +175,11 @@ def parse_changes():
 			#if line[0].find('день') == len(line[0]) - 4:
 				#num_of_days[line[0] + num] = 1
 			num = str(i)
-			
 			if i < 10:
 				num = '0' + num
-				
-			try:
-				res_data.append([line[0] + num, line[7], line[8], line[9], line[1]])
-			except:
-				res_data.append(['', '', '', '', ''])
+			res_data.append([line[0] + num, line[7], line[8], line[9]])
 		except:
-			pass
+			continue
 		i += 1
 	return res_data, i
 
@@ -114,10 +187,16 @@ def parse_changes():
 
 
 def parse_secondary():
-	sh = gc.open("DriversDistribTable").get_worksheet(3)
-	data_trip = sh.get_all_values()
-	sh = gc.open("DriversDistribTable").get_worksheet(4)
-	data_car = sh.get_all_values()
+	#sh = gc.open("DriversDistribTable").get_worksheet(3)
+	#sh = shr.get_worksheet(0)
+	#data_trip = sh.get_all_values()
+	data_trip = []
+	#sh = gc.open("DriversDistribTable").get_worksheet(4)
+	data_car = []
+	for i in range(3):
+		sh = shr.get_worksheet(i + 3)
+		data_car.append(sh.get_all_values())
+		'''
 	data_trip = data_trip[2:]
 	length = len(data_trip)
 	for i in range(length):
@@ -125,15 +204,51 @@ def parse_secondary():
 		if i < 10:
 			num = '0' + str(i)
 		data_trip[i][0] += num
-	data_car = data_car[2:]
-	for line in data_car:
-		tmp = line[1]
-		line[1] = line[2]
-		line[2] = tmp
+	'''
+		
+		data_car[i] = data_car[i][1:]
+		for line in data_car[i]:
+			tmp = line[1]
+			line[1] = line[2]
+			line[2] = tmp
 
+	len_car = len(data_car[0])
+	for i in range(len_car):
+		timing[i] = [datetime.datetime.today(), '-1']
 
 	return data_trip, data_car
 
+def choose_col(table):
+	if table == 0:
+		col = 13
+	elif table == 1:
+		col = 7
+	else:
+		col = 14
+	return col
+
+def agree(line_num, table):
+	sh = shr.get_worksheet(table)
+	counter = 0
+	while counter < 10:
+		try:			
+			sh.update_cell(int(line_num) + 2, choose_col(table), 'П')
+			break
+		except:
+			time.sleep(10)
+			counter += 1
+
+
+def rejection(line_num, table):
+	sh = shr.get_worksheet(table)
+	counter = 0
+	while counter < 10:
+		try:			
+			sh.update_cell(int(line_num) + 2, choose_col(table), 'О')
+			break
+		except:
+			time.sleep(10)
+			counter += 1
 
 def input_rdy(driver_id):
 	length_car = len(data_car)
@@ -172,16 +287,8 @@ def find_ind(driver_id, prior_table, data_car, data_trip):
 def find_trip_ind(trip, data_trip):
 	length_trip = len(data_trip)
 	ind_trip = -1
-	llll = len(trip)
-	num_of_nums = 0
-	for i in range(llll):
-		try:
-			int(trip[llll - i - 1])
-			num_of_nums += 1
-		except:
-			break
 	for i in range(length_trip):
-		if data_trip[i][0][:len(data_trip[i][0]) - 2] == trip[:llll - num_of_nums]:
+		if data_trip[i][0][:len(data_trip[i][0]) - 2] == trip:
 			ind_trip = i
 			break
 	return ind_trip
@@ -190,7 +297,7 @@ def find_car_ind(car, data_car):
 	length_trip = len(data_car)
 	ind_car = -1
 	for i in range(length_trip):
-		if data_car[i][0] == car:
+		if data_car[i][2] == car:
 			ind_car = i
 			break
 	return ind_car
@@ -202,15 +309,11 @@ def plus_km(ind_car, ind_trip, data_car, data_trip, driver_id):
 		prev = 0
 
 	counter = 0
-	try:
-		dist = int(data_trip[ind_trip][1])
-	except:
-		return
-
 	while counter < 10:
 		try:
-			sh = gc.open("DriversDistribTable").get_worksheet(4)
-			sh.update_cell(ind_car + 3, 24, str(dist + prev - km[driver_id][0]))
+			#sh = gc.open("DriversDistribTable").get_worksheet(4)
+			sh = shr.get_worksheet(4)
+			sh.update_cell(ind_car + 3, 24, str(int(data_trip[ind_trip][1]) + prev - km[driver_id][0]))
 			break
 		except:
 			time.sleep(10)
@@ -242,27 +345,14 @@ def minus_km(ind_car, data_car, data_trip, driver_id):
 	if len(km[driver_id]) > 7:
 		km[driver_id] = km[driver_id][:8]
 
-def get_return_time(data_trip, ind_trip, ind):
-	global today
-
-	for i in range(len(date_change)):
-		if ind < date_change[i]:
-			cur_date = today + datetime.timedelta(days = i)
-			break
-	else:
-		cur_date = today + datetime.timedelta(days = len(date_change))
-		
-
-	#print('Trip ', ind_trip, cur_date)
-	
+def get_return_time(data_trip, ind_trip):
 	num = 0
 	if data_trip[ind_trip][9] == 'Возврат во второй день':
 		num = 1
 	elif data_trip[ind_trip][9] == 'Возврат на третий день':
 		num = 2
-
-	return_day = cur_date + datetime.timedelta(days = num)
-
+	return_day = datetime.datetime.today() + datetime.timedelta(days = num)
+	
 
 	return_time = data_trip[ind_trip][10][3:]
 	if return_time == '':
@@ -300,15 +390,7 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 
 	ind_car = find_car_ind(driver_data[0], data_car)
 	ind_trip = find_trip_ind(data[ind][0], data_trip)
-	if ind_car != -1:
-		timing_prev[ind_car] = timing[ind_car]
-		try:
-			timing[ind_car] = get_return_time(data_trip, ind_trip, ind)
-		except:
-			print('timing input')
-	else:
-		print('input ind')
-		
+	timing[ind_car] = get_return_time(data_trip, ind_trip)
 	counter = 0
 	while counter < 10:
 		try:
@@ -318,15 +400,15 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 		except:
 			time.sleep(10)
 			counter += 1
+
+	#ind_car, ind_trip = find_ind(driver_data[0], prior_table, data_car, data_trip)
 	
 
-	#if data_trip[ind_trip][11] == 'Север (C)':
-	#	north = chat_id
+	if data_trip[ind_trip][11] == 'Север (C)':
+		north = chat_id
+		#save_north(north)
 
-	try:
-		plus_km(ind_car, ind_trip, data_car, data_trip, driver_data[0])
-	except:
-		pass
+	plus_km(ind_car, ind_trip, data_car, data_trip, driver_data[0])
 
 
 	
@@ -336,49 +418,56 @@ def input_data(ind, prior_table, driver_data, data_car, data_trip, data):
 
 def clear_data(ind, prior_table, driver_data, data_car, data_trip, data):
 	global north
-
+	sh = shr
 	counter = 0
 	while counter < 10:
 		try:
-			print(sh.sheet1.update_cell(ind + 3, 2, ''))
-			print(sh.sheet1.update_cell(ind + 3, 3, ''))
+			sh.sheet1.update_cell(ind + 3, 2, '')
+			sh.sheet1.update_cell(ind + 3, 3, '')
 			break
 		except:
 			time.sleep(10)
 			counter += 1
 
-	
+	#ind_car, ind_trip = find_ind(driver_data[0], prior_table, data_car, data_trip)
 	ind_car = find_car_ind(driver_data[0], data_car)
 	ind_trip = find_trip_ind(data[ind], data_trip)
 
 	if data_trip[ind_trip][11] == 'Север (C)':
 		north = ''
+		#save_north(north)
 
-	#minus_km(ind_car, data_car, data_trip, driver_data[0])
+	minus_km(ind_car, data_car, data_trip, driver_data[0])
 
 	timing[ind_car] = [datetime.datetime.today(), '-1']
-	timing_prev[ind_car] = [datetime.datetime.today(), '-1']
 
-def del_driver_from_table(data_car):
+def del_driver_from_table(data_car, table):
 	counter = 0
 	while counter < 1:
 		try:
-			sh2 = gc.open("DriversDistribTable").get_worksheet(4)
+			sh2 = shr.get_worksheet(table + 3)
 			length = len(data_car)
+			arr = []
+			#for i in range(length):
+			#	arr.append('')
+			#sh2.update('L1:L' + str(length), [arr])
 			for i in range(length):
-				sh2.update_cell(3 + i, 25, '')
+				if table == 2:
+					col = 7
+				else:
+					col = 12
+				sh2.update_cell(3 + i, col, '')
 			break
 		except:
-			time.sleep(10)
+			time.sleep()
 			counter += 1
 	return 0
 
 
-def add_driver_to_table(cur_driver, prior_table, data_car):
+def add_driver_to_table(cur_driver, prior_table, data_car, table):
 	#ind_car, ind_trip = find_ind(cur_driver, prior_table, data_car, {})
 	ind_car = find_car_ind(cur_driver, data_car)
 	#ind_trip = find_trip_ind(data[ind], data_trip)
-
 	if ind_car == -1:
 		print('Bad car')
 		return -1
@@ -386,68 +475,34 @@ def add_driver_to_table(cur_driver, prior_table, data_car):
 	counter = 0
 	while counter < 10:
 		try:
-			sh2 = gc.open("DriversDistribTable").get_worksheet(4)
-			sh2.update_cell(ind_car + 3, 25, 'v')
+			sh2 = shr.get_worksheet(table + 3)
+			if table == 2:
+				col = 7
+			else:
+				col = 12
+			sh2.update_cell(ind_car + 2, col, 'ДА')
 			break
 		except:
-			time.sleep(10)
+			time.sleep(1)
 			counter += 1
 	return 0
 
-def check_driver(timing, timing_prev, driver, line, prior, data_car, data_trip):
-	global today
-
+def check_driver(driver, line, prior, data_car, data_trip):
 	ind_car = find_car_ind(driver, data_car)
-	if ind_car == -1:
-		print('index of car', driver)
-		return False
-
 	try:
 		if orders[driver] == 1:
 			return False
 	except:
 		orders[driver] = 0
 
-	num_of_nums = 0
-	llll = len(prior)
-	for i in range(llll):
-		try:
-			int(prior[llll - i - 1])
-			num_of_nums += 1
-		except:
-			break
+	if timing[ind_car][0] > datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - 2:]]):									# Время
+		#print('time', data_car[ind_car][0])
+		return False
 
-	try:
-		if timing[ind_car][0] < 0:
-			timing[ind_car][0] = (today + datetime.timedelta( num_of_days[prior[len(prior) - num_of_nums:]])).date()
-		if timing_prev[ind_car][0] < 0:
-			timing_prev[ind_car][0] = (today + datetime.timedelta( num_of_days[prior[len(prior) - num_of_nums:]])).date()
-	except:
-		pass
-
-	try:
-		if timing[ind_car][0] != -1:
-			timing[ind_car][0] = timing[ind_car][0].date()
-	except:
-		pass
-	
-	try:
-		#print('Days', timing[ind_car][0], (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date())
-		if timing[ind_car][0] > (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():									# Время
-			print('Days ', num_of_days[prior[len(prior) - num_of_nums:]])
-			return False
-		if timing[ind_car][0] < (today + datetime.timedelta(num_of_days[prior[len(prior) - num_of_nums:]])).date():	
-			orders[driver] = 1
-			return True
-	except:
-		pass
-	try:
-		#print('TIME', timing[ind_car][1], line[1], line[0])
-		if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
-			return False
-	except:
-		pass
-
+	#if timing[ind_car][0] == datetime.datetime.today() + datetime.timedelta(num_of_days[prior[len(prior) - 2:]]):
+	if int(timing[ind_car][1].split(':')[0]) > int(line[1].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[1].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[1].split(':')[1])):
+		#print('time', data_car[ind_car][0])
+		return False
 
 	orders[driver] = 1
 	return True
@@ -455,8 +510,6 @@ def check_driver(timing, timing_prev, driver, line, prior, data_car, data_trip):
 def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 	sorted_drivers = []
 	sorted_drivers_sec = []
-	sorted_drivers_prev = []
-	sorted_drivers_sec_prev = []
 
 
 	if data_trip[ind_trip][11] == 'Север (С)' and north != '':				#Север
@@ -464,17 +517,15 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 	for driver in drivers:
 		ind_car = find_car_ind(drivers[driver][0], data_car)
+
 		try:
-			if len(data_car[ind_car][5]) == 0 and line[1] == '10':
-				print('Hello0')
-				continue
 			if line[1][len(line[1]) - 1] == '+' or line[1][len(line[1]) - 1] == '-':
 				#line[1] = line[1][:len(line[1]) - 1]
+				if len(data_car[ind_car][5]) == 0 and line[1] == '10':
+					continue
 				if len(data_car[ind_car][6]) == 0 and line[1] == '20-':		#Грузоподъемность
-
 					continue
 				if len(data_car[ind_car][7]) == 0 and line[1] == '20+':
-
 					continue
 				if len(data_car[ind_car][8]) == 0 and line[1] == '30-':
 					continue
@@ -492,160 +543,121 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 				if len(data_car[ind_car][14]) == 0:
 					continue
 			elif int(data_car[ind_car][2]) < int(line[1]):
+				#print('Vol', data_car[ind_car][0], line[1], int(line[1]))
 				continue
 		except:
 			time.sleep(0.1)
 			continue
 		
 		if len(data_trip[ind_trip][13]) == 0 and data_car[ind_car][20] == 'т20':		#Тип машины
-
 			continue
 		if len(data_trip[ind_trip][14]) == 0 and data_car[ind_car][20] == 'т30':
-
+			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][15]) == 0 and data_car[ind_car][20] == 'т40':
-
+			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][16]) == 0 and data_car[ind_car][20] == 'т50':
-
+			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][17]) == 0 and data_car[ind_car][20] == 'фура':
-
+			#print('type', data_car[ind_car][0])
 			continue
 		if len(data_trip[ind_trip][12]) == 0 and data_car[ind_car][20] == 'фургон':
 			continue
 		
 
-		if len(data_car[ind_car][18]) == 0 and data_trip[ind_trip][11] == 'ЕКБ МЕГА':
+		
+		
 
-			continue
-		if len(data_car[ind_car][19]) == 0 and data_trip[ind_trip][11].find('Новоуральск') > -1:
+		'''
+		try:
+			if timing[ind_car][0] > datetime.datetime.today():									# Время
+				print('time', data_car[ind_car][0])
+				continue
 
-			continue
-		if len(data_car[ind_car][20]) == 0 and data_trip[ind_trip][11] == 'шатл':
+			if int(timing[ind_car][1].split(':')[0]) > int(line[2].split(':')[0]) or (int(timing[ind_car][1].split(':')[0]) == int(line[2].split(':')[0]) and int(timing[ind_car][1].split(':')[1]) > int(line[2].split(':')[1])):
+				print('time', data_car[ind_car][0])
+				continue
+		except:
+			ii = 0
+		'''
 
-			continue
-
-		if data_trip[ind_trip][11] == 'город' and len(data_car[ind_car][15]) == 0:
-
-			continue
-		if data_trip[ind_trip][11] == 'межгород' and len(data_car[ind_car][17]) == 0:
-
-			continue
-
-
-		if len(data_car[ind_car][22]) != 0:
-			sorted_drivers_prev.append(driver)										#Приоритет
+		if len(data_car[ind_car][21]) != 0:
+			sorted_drivers.append(driver)										#Приоритет
 		else:
-			sorted_drivers_sec_prev.append(driver)
+			sorted_drivers_sec.append(driver)
 
 
-	length_1 = len(sorted_drivers_prev)
-	length_2 = len(sorted_drivers_sec_prev)
+	length_1 = len(sorted_drivers)
+	length_2 = len(sorted_drivers_sec)
 
 	for i in range(length_1):
-		ind_car = find_car_ind(drivers[sorted_drivers_prev[i]][0], data_car)
-		if data_car[ind_car][19] == 'v' and data_trip[ind_trip][11].find('Новоуральск') > -1:
-			tmp = sorted_drivers_prev[i]
+		ind_car = find_car_ind(drivers[sorted_drivers[i]][0], data_car)
+		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] == 'v':					#Тип поездки
+			tmp = sorted_drivers[i]
+			del sorted_drivers[i]
 			sorted_drivers.insert(0, tmp)
-			continue
-		if data_car[ind_car][18] == 'v' and data_trip[ind_trip][11].find('ЕКБ МЕГА') > -1:
-			tmp = sorted_drivers_prev[i]
-			sorted_drivers.insert(0, tmp)
-			continue
-		if data_car[ind_car][20] == 'v' and data_trip[ind_trip][11].find('шатл') > -1:
-			tmp = sorted_drivers_prev[i]
-			sorted_drivers.insert(0, tmp)
-			continue
-		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):			
-			tmp = sorted_drivers_prev[i]
+			
+		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] != 'v' and data_car[ind_car][15] != 'v':			
+			tmp = sorted_drivers[i]
+			del sorted_drivers[i]
 			sorted_drivers.append(tmp)
-			continue
-		if data_trip[ind_trip][11] == 'город' and (data_car[ind_car][15] == 'v' or data_car[ind_car][15] == 'vv'):					#Тип поездки
-			tmp = sorted_drivers_prev[i]
-			sorted_drivers.insert(0, tmp)
-
-		if data_trip[ind_trip][11] == 'межгород' and (data_car[ind_car][17] == 'v'  or data_car[ind_car][17] == 'vv'):
-			tmp = sorted_drivers_prev[i]
-			sorted_drivers.insert(0, tmp)
+		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][14] == 'v':
+			tmp = sorted_drivers[i]
+			del sorted_drivers[i]
+			sorted_drivers.append(tmp)
+			
 
 	for j in range(length_1):
 		for i in range(length_1 - 1):											#Километраж за неделю
 			ind_car1 = find_car_ind(drivers[sorted_drivers[i]][0], data_car)
 			ind_car2 = find_car_ind(drivers[sorted_drivers[i + 1]][0], data_car)
 			try:
-				num1 = int(data_car[ind_car1][23])
+				num1 = int(data_car[ind_car1][14][22])
 			except:
 				num1 = 0
 			try:
-				num2 = int(data_car[ind_car2][23])
+				num2 = int(data_car[ind_car2][14][22])
 			except:
 				num2 = 0
-			try:
-				num_km = int(data_trip[ind_trip][1])
-			except:
-				num_km = 0
-				
-			if data_trip[ind_trip][11] != 'город' and num_km < 500 and num1 > num2:
+			if data_trip[ind_trip][11] != 'город' and num1 > num2:
 				tmp = sorted_drivers[i]
 				sorted_drivers[i] = sorted_drivers[i + 1]
 				sorted_drivers[i + 1] = tmp
-			elif data_trip[ind_trip][11] != 'город' and num1 > num2:
-				tmp = sorted_drivers[i + 1]
-				sorted_drivers[i + 1] = sorted_drivers[i]
-				sorted_drivers[i] = tmp
+
 
 	for i in range(length_2):
-		ind_car = find_car_ind(drivers[sorted_drivers_sec_prev[i]][0], data_car)
-		if data_car[ind_car][19] == 'v' and data_trip[ind_trip][11].find('Новоуральск') > -1:
-			tmp = sorted_drivers_sec_prev[i]
+		ind_car = find_car_ind(drivers[sorted_drivers_sec[i]][0], data_car)
+		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] == 'v':					#Тип поездки
+			tmp = sorted_drivers_sec[i]
+			del sorted_drivers_sec[i]
 			sorted_drivers_sec.insert(0, tmp)
-			continue
-		if data_car[ind_car][18] == 'v' and data_trip[ind_trip][11].find('ЕКБ МЕГА') > -1:
-			tmp = sorted_drivers_sec_prev[i]
-			sorted_drivers_sec.insert(0, tmp)
-			continue
-		if data_car[ind_car][20] == 'v' and data_trip[ind_trip][11].find('шатл') > -1:
-			tmp = sorted_drivers_sec_prev[i]
-			sorted_drivers_sec.insert(0, tmp)
-			continue
-		if data_car[ind_car][15] == 'v' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):	
-			tmp = sorted_drivers_sec_prev[i]
+		if data_trip[ind_trip][11] == 'город' and data_car[ind_car][14] != 'v' and data_car[ind_car][15] != 'v':	
+			tmp = sorted_drivers_sec[i]
+			del sorted_drivers_sec[i]
 			sorted_drivers_sec.append(tmp)
-			continue
-		if data_trip[ind_trip][11] == 'город' and (data_car[ind_car][15] == 'v' or data_car[ind_car][15] == 'vv'):					#Тип поездки
-			tmp = sorted_drivers_sec_prev[i]
-			sorted_drivers_sec.insert(0, tmp)
-
-		if data_trip[ind_trip][11] == 'межгород' and (data_car[ind_car][17] == 'v' or data_car[ind_car][17] == 'vv'):
-			tmp = sorted_drivers_sec_prev[i]
-			sorted_drivers_sec.insert(0, tmp)
+		if data_trip[ind_trip][11] != 'город' and data_car[ind_car][14] == 'v':
+			tmp = sorted_drivers_sec[i]
+			del sorted_drivers_sec[i]
+			sorted_drivers_sec.append(tmp)
 
 	for j in range(length_2):
 		for i in range(length_2 - 1):											#Километраж за неделю
 			ind_car1 = find_car_ind(drivers[sorted_drivers_sec[i]][0], data_car)
 			ind_car2 = find_car_ind(drivers[sorted_drivers_sec[i + 1]][0], data_car)
 			try:
-				num1 = int(data_car[ind_car1][23])
+				num1 = int(data_car[ind_car1][14][22])
 			except:
 				num1 = 0
 			try:
-				num2 = int(data_car[ind_car2][23])
+				num2 = int(data_car[ind_car2][14][22])
 			except:
 				num2 = 0
-			try:
-				num_km = int(data_trip[ind_trip][1])
-			except:
-				num_km = 0
-			
-			if data_trip[ind_trip][11] != 'город' and num_km < 500 and num1 > num2:
+			if data_trip[ind_trip][11] != 'город' and num1 > num2:
 				tmp = sorted_drivers_sec[i]
 				sorted_drivers_sec[i] = sorted_drivers_sec[i + 1]
 				sorted_drivers_sec[i + 1] = tmp
-			elif data_trip[ind_trip][11] != 'город' and num1 > num2:
-				tmp = sorted_drivers_sec[i + 1]
-				sorted_drivers_sec[i + 1] = sorted_drivers_sec[i]
-				sorted_drivers_sec[i] = tmp
 
 	return sorted_drivers + sorted_drivers_sec
 
@@ -654,28 +666,14 @@ def find_best(ind_trip, line, drivers, i, data_car, data_trip):
 
 
 def find_priorities(data, prior_table, drivers, data_car, data_trip):
-	prior_table.clear()
 	length = len(data)
-	'''
-	for i in range(length):
-		for j in range(length - 1):		
-			if data[j][3] == '' or data[j][1] != '':
-				continue 
-			ind_trip = find_trip_ind(data[j + 1][0], data_trip)	
-			ind_trip2 = find_trip_ind(data[j][0], data_trip)
-			if data_trip[ind_trip][1] > data_trip[ind_trip2][1]:
-				tmp = data[j]
-				data[j] = data[j + 1]
-				data[j + 1] = tmp
-	'''
-
 	for i in range(length):
 		num = str(i)
 		if i < 10:
 			num = '0' + str(i)
 		try:
-			if data[i][3] == '' or prev_order(data[i][4], num):
-				continue
+			if data[i][3] == '':# or prev_order(data[i][4], num):
+					continue
 			if data[i][1] != '':
 				taken[data[i][0] + num] = True
 				continue
@@ -687,13 +685,11 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 				taken[data[i][0] + num] = True
 				continue
 		except:
-			kk = 0
+			jj = 0
 
 		taken[data[i][0] + num] = False
 
 		ind_trip = find_trip_ind(data[i][0], data_trip)
-		if ind_trip == -1:
-			print('Index of trip_')
 
 		data[i] = [data[i][0], data[i][3], data[i][4], data[i][5]]
 		sorted_drivers = find_best(ind_trip, data[i], drivers, i, data_car, data_trip)
@@ -701,13 +697,6 @@ def find_priorities(data, prior_table, drivers, data_car, data_trip):
 		try:
 			drivers[sorted_drivers[0]][3] = i
 		except:
-			pass
+			j = 0
 
- 
- 
- 
- 
- 
- 
- 
  
