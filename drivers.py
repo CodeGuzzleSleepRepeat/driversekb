@@ -732,7 +732,7 @@ def main():
 	        update_id = get_updates()[-1]['update_id']
 	        f = False
 	    except:
-	        time.sleep(1)
+	        time.sleep(0.1)
 
 
 	while True:
@@ -748,6 +748,7 @@ def main():
 			messages = get_updates(update_id)
 			for message in messages:
 				if update_id < message['update_id']:
+					print(message['message']['text'])
 					update_id = message['update_id']
 
 					try:					
