@@ -748,7 +748,6 @@ def main():
 			messages = get_updates(update_id)
 			for message in messages:
 				if update_id < message['update_id']:
-					print(message['message']['text'])
 					update_id = message['update_id']
 
 					try:					
