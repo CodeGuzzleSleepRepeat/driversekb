@@ -465,7 +465,10 @@ def check_message(message):
 		reply_admin_markup(chat_id, 'Вас назначили логистом')
 		new_admins.remove(user)
 		admin_id.add(chat_id)
-		drivers.remove(chat_id)
+		try:
+			drivers.remove(chat_id)
+		except:
+			pass
 		return
 
 	if message['message']['text'] == 'Добавить машину':
